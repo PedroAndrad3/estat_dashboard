@@ -1,0 +1,30 @@
+icao,latitude_deg,longitude_deg,iso_country,name,municipality,is_caop,notes
+SBAM,2.0775,-50.8582,BR,Amapá Airport,Amapá,False,Fonte secundária (metar-taf/opennav); usar até obter ARP oficial local
+SBDO,-22.200555555555557,-54.92555555555556,BR,Dourados,Dourados,False,Fonte DECEA AISWEB; ARP 22 12 02S 054 55 32W
+SBGP,-21.764166666666668,-48.40444444444445,BR,EMBRAER - Unidade Gavião Peixoto,Gavião Peixoto,False,Fonte secundária SkyVector; Coordinates S21°45.87' W48°24.28' (usar até obter ARP oficial local)
+SBJD,-23.18166666666667,-46.94361111111111,BR,Comandante Rolim Adolfo Amaro,Jundiaí,False,Fonte DECEA AISWEB/ROTAER; ARP 23 10 54S 046 56 37W
+SBJI,-10.870555555555557,-61.84666666666667,BR,Ji-Paraná,Ji-Paraná,False,Fonte DECEA ADC; ARP S10 52 14 W061 50 48
+SBMT,-23.5091666667,-46.6375,BR,Campo de Marte,São Paulo,False,Fonte oficial DECEA AISWEB; ARP 23 30 33S/046 38 15W
+SBSG,-5.768888888888889,-35.36638888888889,BR,São Gonçalo do Amarante - Governador Aluizio Alves,São Gonçalo do Amarante,False,Fonte DECEA eAIP; ARP 054608S 0352159W
+SDHL,-22.974844444444443,-43.216483333333336,BR,Lagoa Heliport,Rio de Janeiro,False,Fonte DECEA AISWEB; 22 58 29.44S 043 12 59.34W
+SDOE,-5.7191666667,-45.7791666667,BR,Fazenda Sibéria,Grajaú,False,Fonte oficial Portaria/ANAC; ARP 05 43 09S/045 46 45W
+SDXF,-14.1191666667,-47.5302777778,BR,Alto Paraíso de Goiás,Alto Paraíso de Goiás,False,Fonte oficial DECEA ROTAER completo; ARP 14 07 09S/047 31 49W
+SIQE,-15.9391666667,-47.8088888889,BR,Planalto Central,Brasília,False,"Fonte oficial DECEA VAC SBBR; posição SIQE 15°56'21.00""S / 47°48'32.00""W"
+SJAH,-5.7738888889,-46.1647222222,BR,Fazenda Gesso Integral,Grajaú,False,Fonte oficial DECEA AISWEB/ROTAER; ARP 05 46 26S/046 09 53W
+SJDS,-3.9172222222,-38.4891666667,BR,Dias Branco,Eusébio,False,Fonte oficial DECEA comparativo ROTAER; ARP 03 55 02S/038 29 21W
+SJHG,-10.6331277778,-51.5662166667,BR,Confresa,Confresa,False,Fonte oficial DECEA ROTAER completo; ARP 10 37 59.26S/051 33 58.38W
+SJMH,3.3180555556,-62.9711111111,BR,Palimiú,Alto Alegre,False,Fonte oficial DECEA ROTAER (cap. 3); ARP 03 19 05N/062 58 16W
+SJPF,-25.5166666667,-54.5738888889,BR,Polícia Federal-Foz do Iguaçu,Foz do Iguaçu,False,Fonte oficial DECEA AISWEB/ROTAER; ARP 25 31 00S/054 34 26W
+SJUR,-13.4841666667,-54.1036111111,BR,Fazenda Reunidas,Paranatinga,False,Fonte oficial DECEA ROTAER; ARP 13 29 03S/054 06 13W
+SJVD,-14.2225305556,-53.4601722222,BR,NRE Paranatinga,Paranatinga,False,Fonte oficial DECEA AISWEB; ARP 14 13 21.11S/053 27 36.62W
+SLPM,-13.73795,-66.40933,BO,Palmira Airport,Palmira,False,Fonte secundária (CheckWX/Wikipedia); usar até obter AIP oficial da Bolívia
+SNAV,-9.504166666666666,-40.36944444444445,BR,Agrovale,Juazeiro,False,Fonte DECEA ROTAER; ARP 09 30 15S 040 22 10W
+SNSG,-8.046666666666667,-39.13388888888889,BR,Salgueiro,Salgueiro,False,Fonte DECEA AISWEB/ROTAER; ARP 08 02 48S 039 08 02W
+SS36,-24.0755194444,-54.2530444444,BR,Base Grifo,Guaíra,False,Fonte oficial DECEA AISWEB/ROTAER; ARP 24 04 31.87S/054 15 10.96W
+SWBG,-15.1933333333,-59.3852777778,BR,André Antônio Maggi,Pontes e Lacerda,False,Fonte oficial DECEA AISWEB/ROTAER; ARP 15 11 36S/059 23 07W
+SWJP,-1.4038888889,-69.4236111111,BR,Vila Bittencourt,Japurá,False,Fonte ANAC cadastro de aeródromos / AIS; ARP 01 24 14S/069 25 25W
+SWLL,-13.6266666667,-45.415,BR,Fazenda Liberdade,Correntina,False,Fonte oficial DECEA AISWEB/ROTAER; ARP 13 37 36S/045 24 54W
+SWLW,-2.4963888889,-44.2794444444,BR,Grupo Tático Aéreo,São Luís,False,Fonte oficial DECEA AISWEB/ROTAER; ARP 02 29 47S/044 16 46W
+SWSW,-15.7797222222,-47.9130555556,BR,Toca PCDF,Brasília,False,Fonte oficial DECEA AISWEB/ROTAER; ARP 15 46 47S/047 54 47W
+SWUQ,2.8352777778,-63.6469444444,BR,Surucucu,Alto Alegre,False,Fonte oficial DECEA ADC SWUQ; ARP N02 50 07 W063 38 49
+SWYN,-7.1722222222,-59.8388888889,BR,Apuí,Apuí,False,Fonte oficial DECEA ROTAER completo; ARP 07 10 20S/059 50 20W
