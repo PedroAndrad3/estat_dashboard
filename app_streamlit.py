@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, datetime, time
 from typing import Optional
 
 import numpy as np
@@ -41,7 +42,7 @@ IGNORED_ICAOS_ALWAYS = {"ZZZZ"}
 
 # Defina aqui os aeroportos/base da CAOP.
 # Exemplo: {"SBBR", "SBGO"}
-CAOP_AIRPORTS = set()
+CAOP_AIRPORTS = {"SBBR"}
 
 POINT_COLORS = {
     "Brasil": "#4cc9f0",
@@ -86,6 +87,57 @@ FIXED_COLUMNS = {
         "DESTRUIÇÃO + ERRADICAÇÃO (1 POR DIA CADA)",
         "ERR (NOME DA OPERAÇÃO)",
     ],
+    
+    "nat": "NAT.",
+    "espec": "ESPEC.",
+}
+
+NAT_MAP = {
+    "CQ": "Cheque / Recheque",
+    "TN": "Treinamento",
+    "EX": "Voo de experiência",
+    "TR": "Traslado",
+    "SA": "Serviço aéreo especializado",
+}
+
+ESPEC_MAP = {
+    "CQ": "Cheque / Recheque",
+    "TN": "Treinamento",
+    "EX": "Voo de experiência para manutenção",
+    "SPF": "Transporte de servidores da PF",
+    "SFN": "Transporte de servidores da FNSP",
+    "SDE": "Transporte de servidores do DEPEN",
+    "SOO": "Transporte de servidores de outro órgão",
+    "ERR": "Erradicação",
+    "DES": "Destruição de máquinas / equipamentos",
+    "ESC": "Escolta aérea",
+    "ESP": "Transporte de presos da PF",
+    "ESD": "Transporte de presos do DEPEN",
+    "ESO": "Transporte de presos de outro órgão",
+    "IMA": "Serviço de imageamento",
+    "INT": "Efetivo emprego dos operadores aerotáticos",
+    "LPQ": "Lançamento de paraquedistas",
+    "REC": "Serviço de vigilância aérea ou reconhecimento",
+    "EVT": "Cerimônias / apresentação institucional",
+    "RES": "Resgate de vítimas",
+    "TRP": "Somente tripulação a bordo",
+    "TRM": "Ida / volta de manutenção fora de sede",
+    "TRO": "Treinamento de operadores / outros a bordo",
+    "TCE": "Transporte de carga exclusiva",
+}
+
+OPS_SPEC_CODES = {"OBS", "IMA", "REC", "INT", "MOB", "ERR", "DES", "TCE", "EVT"}
+
+OPS_SPEC_LABELS = {
+    "OBS": "Observação",
+    "IMA": "Observação",
+    "REC": "Observação",
+    "INT": "Intervenção",
+    "MOB": "Mobilização",
+    "ERR": "Erradicação",
+    "DES": "Destruição",
+    "TCE": "Mobilização",
+    "EVT": "Evento",
 }
 
 @dataclass
@@ -104,6 +156,9 @@ class ColumnConfig:
     passengers: Optional[str] = None
     prisoners: Optional[str] = None
     cargo: Optional[str] = None
+
+    nat: Optional[str] = None
+    espec: Optional[str] = None
 
     op_metrics: list[str] | None = None
 
@@ -124,6 +179,72 @@ PLOTLY_CONFIG = {
     },
 }
 
+
+
+def _is_missing(value) -> bool:
+    try:
+        return pd.isna(value)
+    except Exception:
+        return False
+
+
+def _stringify_for_streamlit(value):
+    if value is None or _is_missing(value):
+        return None
+    if isinstance(value, (pd.Timestamp, datetime, date)):
+        return value.isoformat(sep=" ") if hasattr(value, "isoformat") else str(value)
+    if isinstance(value, time):
+        return value.isoformat()
+    return str(value)
+
+
+def _make_arrow_safe_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return df
+
+    out = df.copy()
+    risky_types = (pd.Timestamp, datetime, date, time, list, dict, set, tuple, bytes, bytearray)
+
+    for col in out.columns:
+        s = out[col]
+        if pd.api.types.is_datetime64_any_dtype(s):
+            continue
+
+        if pd.api.types.is_object_dtype(s) or pd.api.types.is_string_dtype(s):
+            non_na = s.dropna()
+            if non_na.empty:
+                continue
+
+            sample = non_na.head(100).tolist()
+            types = {type(v) for v in sample}
+            should_stringify = len(types) > 1 or any(isinstance(v, risky_types) for v in sample)
+
+            if should_stringify:
+                out[col] = s.map(_stringify_for_streamlit)
+
+    return out.infer_objects(copy=False)
+
+
+_ORIG_ST_DATAFRAME = st.dataframe
+_ORIG_ST_PLOTLY_CHART = st.plotly_chart
+
+
+def _safe_st_dataframe(data=None, *args, **kwargs):
+    if kwargs.pop("use_container_width", None) is True and "width" not in kwargs:
+        kwargs["width"] = "stretch"
+    if isinstance(data, pd.DataFrame):
+        data = _make_arrow_safe_dataframe(data)
+    return _ORIG_ST_DATAFRAME(data, *args, **kwargs)
+
+
+def _safe_st_plotly_chart(figure_or_data, *args, **kwargs):
+    if kwargs.pop("use_container_width", None) is True and "width" not in kwargs:
+        kwargs["width"] = "stretch"
+    return _ORIG_ST_PLOTLY_CHART(figure_or_data, *args, **kwargs)
+
+
+st.dataframe = _safe_st_dataframe
+st.plotly_chart = _safe_st_plotly_chart
 def style_plotly_figure(fig, height=500):
     fig.update_layout(
         template="plotly_white",
@@ -263,6 +384,10 @@ def load_airports_table(_: bytes) -> pd.DataFrame:
     # Mantido apenas por compatibilidade; o app agora usa load_airports(data_dir="data")
     return pd.DataFrame()
 
+@st.cache_data(show_spinner=False)
+def load_airports_cached(data_dir: str = "data") -> pd.DataFrame:
+    return load_airports(data_dir=data_dir)
+
 def build_fixed_config(df: pd.DataFrame, inferred) -> ColumnConfig:
     return ColumnConfig(
         demandante=_existing_column(df, FIXED_COLUMNS["demandante"]) or getattr(inferred, "demandante", None),
@@ -278,6 +403,9 @@ def build_fixed_config(df: pd.DataFrame, inferred) -> ColumnConfig:
         passengers=_existing_first(df, FIXED_COLUMNS["passengers"]),
         prisoners=_existing_first(df, FIXED_COLUMNS["prisoners"]),
         cargo=_existing_first(df, FIXED_COLUMNS["cargo"]),
+
+        nat=_existing_column(df, FIXED_COLUMNS["nat"]),
+        espec=_existing_column(df, FIXED_COLUMNS["espec"]),
 
         status=getattr(inferred, "status", None),
         op_metrics=_existing_columns(df, FIXED_COLUMNS["op_metrics"]) or getattr(inferred, "op_metrics", []),
@@ -315,6 +443,24 @@ def apply_column_overrides(df: pd.DataFrame, cfg: ColumnConfig) -> pd.DataFrame:
     out["_prisoners"] = _safe_numeric_series(out, cfg.prisoners)
     out["_cargo"] = _safe_numeric_series(out, cfg.cargo)
 
+    if cfg.nat and cfg.nat in out.columns:
+        nat = out[cfg.nat].astype(str).str.strip().str.upper()
+        out["_nat_code"] = nat
+        out["_nat_label"] = nat.map(NAT_MAP).fillna(nat)
+    else:
+        out["_nat_code"] = pd.NA
+        out["_nat_label"] = pd.NA
+
+    if cfg.espec and cfg.espec in out.columns:
+        espec = out[cfg.espec].astype(str).str.strip().str.upper()
+        out["_espec_code"] = espec
+        out["_espec_label"] = espec.map(ESPEC_MAP).fillna(espec)
+        out["_op_exec"] = espec.map(OPS_SPEC_LABELS)
+    else:
+        out["_espec_code"] = pd.NA
+        out["_espec_label"] = pd.NA
+        out["_op_exec"] = pd.NA
+
     return out
 
 def get_year_options(df: pd.DataFrame) -> list[int]:
@@ -346,9 +492,9 @@ def render_global_filters(df: pd.DataFrame) -> FilterConfig:
         ensure_year_session(years)
         c1, c2, c3 = st.columns([2, 1, 1])
         with c2:
-            st.button("Último ano", on_click=set_last_year, args=(years,), use_container_width=True)
+            st.button("Último ano", on_click=set_last_year, args=(years,), width='stretch')
         with c3:
-            st.button("Últimos 2", on_click=set_last_two_years, args=(years,), use_container_width=True)
+            st.button("Últimos 2", on_click=set_last_two_years, args=(years,), width='stretch')
         with c1:
             st.multiselect("Filtro de anos", options=years, key="years_sel")
         selected_years = st.session_state["years_sel"]
@@ -497,7 +643,7 @@ def render_ignored_icao_section(valid_points: pd.DataFrame, ignored_df: pd.DataF
         else:
             ignored_show = ignored_df.groupby(["icao", "motivo"], dropna=False)["visitas"].sum().reset_index()
             ignored_show = ignored_show.sort_values(["visitas", "icao"], ascending=[False, True])
-            st.dataframe(ignored_show, use_container_width=True)
+            st.dataframe(ignored_show, width='stretch')
 
 def render_overview(df: pd.DataFrame, cfg: ColumnConfig) -> None:
     st.subheader("Visão geral")
@@ -559,7 +705,7 @@ def render_overview(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         )
 
         fig.update_layout(xaxis_title="ANO", yaxis_title="HORAS DE VOO (TTV)", legend_title="CATEGORIA")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
 
 def render_operations(df: pd.DataFrame, cfg: ColumnConfig) -> None:
     st.subheader("Operações")
@@ -568,26 +714,202 @@ def render_operations(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         st.warning("Filtro atual retornou 0 linhas.")
         return
 
-    if cfg.op_metrics:
-        rows = []
-        methods = []
-        for col in cfg.op_metrics:
-            if col not in df.columns:
-                continue
-            value, method = count_or_sum(df[col])
-            rows.append((col, value))
-            methods.append((col, method))
+    if not cfg.op_metrics:
+        st.info("As colunas de operações não foram encontradas automaticamente.")
+        return
 
-        ops = pd.DataFrame(rows, columns=["tipo", "quantidade"]).sort_values("quantidade", ascending=False)
-        methods_df = pd.DataFrame(methods, columns=["tipo", "método"]).sort_values("tipo")
+    # Colunas originais
+    OBS_COL = "OBS (IMA + REC) (1 por dia)"
+    INT_COL = "INT (1 por dia)"
+    MOB_COL = "MOBILIZAÇÃO (POR NOME DA OPERAÇÃO, unidade apoiada, serviço especializado)"
+    DESTR_ERR_COL = "DESTRUIÇÃO + ERRADICAÇÃO (1 POR DIA CADA)"
+    ERR_COL = "ERR (NOME DA OPERAÇÃO)"
 
-        fig = px.bar(ops.head(25), x="quantidade", y="tipo", orientation="h", title="TOTAIS POR TIPO")
-        st.plotly_chart(fig, use_container_width=True)
+    raw_values = {}
+    methods = []
 
-        with st.expander("Método usado por coluna (soma vs contagem)"):
-            st.dataframe(methods_df, use_container_width=True)
+    for col in cfg.op_metrics:
+        if col not in df.columns:
+            continue
+        value, method = count_or_sum(df[col])
+        value = pd.to_numeric(pd.Series([value]), errors="coerce").fillna(0).iloc[0]
+        raw_values[col] = float(value)
+        methods.append((col, method, float(value)))
 
-        st.dataframe(ops, use_container_width=True)
+    if not raw_values:
+        st.info("Nenhuma métrica de operação foi encontrada nas colunas configuradas.")
+        return
+
+    # Regras de negócio
+    erradicacao = raw_values.get(ERR_COL, 0.0)
+    destruicao_e_erradicacao = raw_values.get(DESTR_ERR_COL, 0.0)
+
+    # Mostrar apenas destruição líquida
+    destruicao = max(destruicao_e_erradicacao - erradicacao, 0.0)
+
+    rows = [
+        ("Observação", raw_values.get(OBS_COL, 0.0)),
+        ("Intervenção", raw_values.get(INT_COL, 0.0)),
+        ("Mobilização", raw_values.get(MOB_COL, 0.0)),
+        ("Destruição", destruicao),
+        ("Erradicação", erradicacao),
+    ]
+
+    ops = pd.DataFrame(rows, columns=["tipo", "quantidade"])
+    ops["quantidade"] = pd.to_numeric(ops["quantidade"], errors="coerce").fillna(0.0)
+    ops["quantidade"] = ops["quantidade"].clip(lower=0)
+
+    if ops["quantidade"].sum() <= 0:
+        st.info("Não há valores positivos de operações no filtro atual.")
+        return
+
+    def _fmt_num(v: float) -> str:
+        if abs(v - round(v)) < 1e-9:
+            return _format_int(int(round(v)))
+        return _format_float_br(v)
+
+    ops["quantidade_txt"] = ops["quantidade"].map(_fmt_num)
+
+    # KPIs rápidos
+    c1, c2, c3, c4, c5 = st.columns(5)
+    c1.metric("Observação", _fmt_num(float(ops.loc[ops["tipo"] == "Observação", "quantidade"].sum())))
+    c2.metric("Intervenção", _fmt_num(float(ops.loc[ops["tipo"] == "Intervenção", "quantidade"].sum())))
+    c3.metric("Mobilização", _fmt_num(float(ops.loc[ops["tipo"] == "Mobilização", "quantidade"].sum())))
+    c4.metric("Destruição", _fmt_num(float(ops.loc[ops["tipo"] == "Destruição", "quantidade"].sum())))
+    c5.metric("Erradicação", _fmt_num(float(ops.loc[ops["tipo"] == "Erradicação", "quantidade"].sum())))
+
+    st.divider()
+
+    col_bar, col_pie = st.columns([3, 2], vertical_alignment="top")
+
+    with col_bar:
+        ops_bar = ops.sort_values(["quantidade", "tipo"], ascending=[True, True]).copy()
+
+        fig_bar = px.bar(
+            ops_bar,
+            x="quantidade",
+            y="tipo",
+            orientation="h",
+            text="quantidade_txt",
+            title="Tipos de operações realizadas pela CAOP",
+            labels={"quantidade": "Quantidade", "tipo": "Tipo de operação"},
+        )
+
+        fig_bar.update_traces(
+            textposition="outside",
+            cliponaxis=False,
+            textfont=dict(size=15, color="#1f1f1f"),
+        )
+
+        fig_bar.update_layout(
+            template="plotly_white",
+            height=520,
+            font=dict(size=16),
+            title_font=dict(size=24),
+            legend_font=dict(size=14),
+            margin=dict(l=30, r=70, t=80, b=30),
+        )
+        fig_bar.update_xaxes(title_font=dict(size=16), tickfont=dict(size=13))
+        fig_bar.update_yaxes(title_font=dict(size=16), tickfont=dict(size=13))
+
+        st.plotly_chart(
+            fig_bar,
+            width='stretch',
+            config=PLOTLY_CONFIG if "PLOTLY_CONFIG" in globals() else None,
+        )
+
+    with col_pie:
+        ops_pie = ops[ops["quantidade"] > 0].sort_values(
+            ["quantidade", "tipo"], ascending=[False, True]
+        ).copy()
+
+        fig_pie = px.pie(
+            ops_pie,
+            names="tipo",
+            values="quantidade",
+            hole=0.35,
+            title="Distribuição percentual dos tipos de operação",
+        )
+
+        fig_pie.update_traces(
+            textinfo="percent+label",
+            textposition="inside",
+            sort=False,
+        )
+
+        fig_pie.update_layout(
+            template="plotly_white",
+            height=520,
+            font=dict(size=16),
+            title_font=dict(size=24),
+            legend=dict(font=dict(size=14), title_font=dict(size=15)),
+            margin=dict(l=30, r=30, t=80, b=30),
+            uniformtext_minsize=14,
+            uniformtext_mode="hide",
+        )
+
+        st.plotly_chart(
+            fig_pie,
+            width='stretch',
+            config=PLOTLY_CONFIG if "PLOTLY_CONFIG" in globals() else None,
+        )
+
+    st.divider()
+
+    tabela = ops.sort_values(["quantidade", "tipo"], ascending=[False, True]).rename(
+        columns={
+            "tipo": "Tipo de operação",
+            "quantidade": "Quantidade",
+            "quantidade_txt": "Quantidade formatada",
+        }
+    )
+
+    st.dataframe(
+        tabela[["Tipo de operação", "Quantidade"]],
+        width='stretch',
+    )
+
+    with st.expander("Conferência da transformação aplicada"):
+        methods_df = pd.DataFrame(
+            methods,
+            columns=["Coluna original", "Método", "Valor bruto"],
+        )
+
+        regra_df = pd.DataFrame(
+            [
+                {
+                    "Tipo exibido": "Observação",
+                    "Origem": OBS_COL,
+                    "Regra": "Valor direto da coluna original",
+                },
+                {
+                    "Tipo exibido": "Intervenção",
+                    "Origem": INT_COL,
+                    "Regra": "Valor direto da coluna original",
+                },
+                {
+                    "Tipo exibido": "Mobilização",
+                    "Origem": MOB_COL,
+                    "Regra": "Valor direto da coluna original",
+                },
+                {
+                    "Tipo exibido": "Erradicação",
+                    "Origem": ERR_COL,
+                    "Regra": "Valor direto da coluna original",
+                },
+                {
+                    "Tipo exibido": "Destruição",
+                    "Origem": DESTR_ERR_COL,
+                    "Regra": "DESTRUIÇÃO + ERRADICAÇÃO - ERRADICAÇÃO",
+                },
+            ]
+        )
+
+        st.markdown("**Método detectado por coluna**")
+        st.dataframe(methods_df, width='stretch')
+
+        st.markdown("**Regras de exibição para o usuário final**")
+        st.dataframe(regra_df, width='stretch')
 
 def render_map(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFrame]) -> None:
     st.subheader("Mapa")
@@ -614,46 +936,54 @@ def render_map(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFr
     zoom_default = 3.4 if (valid_points["categoria"] == "Exterior").any() else 4.0
 
     if mode == "Somente pontos (todos iguais)":
-        fig = go.Figure()
+        points_df = valid_points.copy()
 
-        for categoria in ["Brasil", "Exterior", "CAOP"]:
-            sub = valid_points[valid_points["categoria"] == categoria].copy()
-            if sub.empty:
-                continue
+        # garante ordem estável da legenda
+        cat_order = ["Brasil", "Exterior", "CAOP"]
+        points_df["categoria"] = pd.Categorical(
+            points_df["categoria"],
+            categories=cat_order,
+            ordered=True,
+        )
 
-            fig.add_trace(
-                go.Scattermapbox(
-                    lat=sub["latitude_deg"],
-                    lon=sub["longitude_deg"],
-                    mode="markers",
-                    name=categoria,
-                    marker=dict(
-                        size=11,
-                        color=POINT_COLORS[categoria],
-                        opacity=0.95,
-                        symbol="circle",
-                    ),
-                    text=sub["icao"],
-                    customdata=np.stack(
-                        [
-                            sub["visitas"].to_numpy(),
-                            sub["iso_country"].fillna("").astype(str).to_numpy(),
-                        ],
-                        axis=1,
-                    ),
-                    hovertemplate="<b>%{text}</b><br>visitas: %{customdata[0]}<br>país: %{customdata[1]}<br>categoria: " + categoria + "<extra></extra>",
-                )
-            )
+        # marcador de tamanho fixo
+        points_df["_marker_size"] = 10
+
+        fig = px.scatter_map(
+            points_df,
+            lat="latitude_deg",
+            lon="longitude_deg",
+            color="categoria",
+            size="_marker_size",
+            size_max=10,
+            zoom=zoom_default,
+            center=center,
+            map_style=map_style,
+            hover_name="icao",
+            hover_data={
+                "visitas": True,
+                "iso_country": True,
+                "categoria": True,
+                "latitude_deg": False,
+                "longitude_deg": False,
+                "_marker_size": False,
+            },
+            color_discrete_map=POINT_COLORS,
+            category_orders={"categoria": cat_order},
+            title="PONTOS VISITADOS (origem e destino)",
+        )
+
+        fig.update_traces(
+            marker=dict(opacity=0.95),
+        )
 
         fig.update_layout(
-            mapbox_style=map_style,
-            mapbox_center=center,
-            mapbox_zoom=zoom_default,
             height=720,
-            margin=dict(l=0, r=0, t=35, b=0),
+            margin=dict(l=0, r=0, t=45, b=0),
             legend_title="CATEGORIA",
         )
-        st.plotly_chart(fig, use_container_width=True)
+
+        st.plotly_chart(fig, width="stretch")
 
     else:
         c1, c2, c3 = st.columns(3)
@@ -664,7 +994,7 @@ def render_map(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFr
         zmax = float(np.quantile(valid_points["visitas"].to_numpy(), float(clip_q))) if len(valid_points) else 1.0
         zmax = max(zmax, 1.0)
 
-        fig = px.density_mapbox(
+        fig = px.density_map(
             valid_points,
             lat="latitude_deg",
             lon="longitude_deg",
@@ -672,7 +1002,7 @@ def render_map(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFr
             radius=int(radius),
             zoom=zoom_default,
             center=center,
-            mapbox_style=map_style,
+            map_style=map_style,
             color_continuous_scale="Turbo",
             range_color=(0, zmax),
             opacity=float(opacity),
@@ -687,7 +1017,7 @@ def render_map(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFr
             for trace in contour_traces_from_grid(grid, levels=int(levels), clip_q=float(clip_q)):
                 fig.add_trace(trace)
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
 
     render_ignored_icao_section(valid_points, ignored_df, summary)
 
@@ -714,6 +1044,38 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         st.warning("Não há demandantes válidos no filtro atual.")
         return
 
+    aircraft_filter_active = bool(cfg.aircraft and cfg.aircraft in base.columns)
+    selected_aircraft = []
+
+    if aircraft_filter_active:
+        base[cfg.aircraft] = base[cfg.aircraft].astype(str).str.strip()
+        aircraft_options = sorted(
+            base.loc[
+                base[cfg.aircraft].ne("")
+                & base[cfg.aircraft].ne("nan")
+                & base[cfg.aircraft].ne("None"),
+                cfg.aircraft,
+            ].astype(str).unique().tolist()
+        )
+
+        if aircraft_options:
+            selected_aircraft = st.multiselect(
+                "Filtrar estatísticas de demandantes por aeronave",
+                options=aircraft_options,
+                default=aircraft_options,
+                key="demandantes_aircraft_filter",
+            )
+
+            if not selected_aircraft:
+                st.warning("Selecione ao menos uma aeronave para visualizar as estatísticas de demandantes.")
+                return
+
+            base = base[base[cfg.aircraft].astype(str).isin(selected_aircraft)].copy()
+
+            if base.empty:
+                st.warning("Não há dados de demandantes para as aeronaves selecionadas.")
+                return
+
     c1, c2, c3 = st.columns([1, 1, 2])
     with c1:
         top_n = st.slider(
@@ -722,11 +1084,12 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
             max_value=min(50, max(1, base[cfg.demandante].nunique())),
             value=min(20, max(1, base[cfg.demandante].nunique())),
             step=1,
+            key="demandantes_top_n",
         )
     with c2:
-        exclude_caop_local = st.checkbox("Excluir CAOP (apenas aqui)", value=True)
+        exclude_caop_local = st.checkbox("Excluir CAOP (apenas aqui)", value=True, key="demandantes_excluir_caop")
     with c3:
-        group_others = st.checkbox("Agrupar restante em 'OUTROS'", value=True)
+        group_others = st.checkbox("Agrupar restante em 'OUTROS'", value=True, key="demandantes_group_others")
 
     total_trechos_full = len(base)
     caop_mask_full = base[cfg.demandante].str.upper() == "CAOP"
@@ -779,6 +1142,9 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
     total_passageiros = float(base["_passengers"].sum()) if "_passengers" in base.columns else 0.0
     total_carga = float(base["_cargo"].sum()) if "_cargo" in base.columns else 0.0
 
+    if selected_aircraft:
+        st.caption(f"Filtro ativo de aeronaves: {', '.join(selected_aircraft)}")
+
     k1, k2, k3, k4, k5 = st.columns(5)
     k1.metric("Demandantes no filtro", _format_int(base[cfg.demandante].nunique()))
     k2.metric("Trechos", _format_int(total_trechos))
@@ -806,7 +1172,7 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         )
         st.plotly_chart(
             style_horizontal_bar_with_labels(fig, height=560, x_pad=0.10),
-            use_container_width=True,
+            width='stretch',
             config=PLOTLY_CONFIG,
         )
 
@@ -822,7 +1188,7 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
             )
             st.plotly_chart(
                 style_pie_figure(fig),
-                use_container_width=True,
+                width='stretch',
                 config=PLOTLY_CONFIG,
             )
 
@@ -844,7 +1210,7 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         )
         st.plotly_chart(
             style_horizontal_bar_with_labels(fig, height=560, x_pad=0.10),
-            use_container_width=True,
+            width='stretch',
             config=PLOTLY_CONFIG,
         )
 
@@ -858,7 +1224,7 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
                 hole=0.35,
                 title="DISTRIBUIÇÃO DE PASSAGEIROS (%)",
             )
-            st.plotly_chart(style_pie_figure(fig), use_container_width=True, config=PLOTLY_CONFIG)
+            st.plotly_chart(style_pie_figure(fig), width='stretch', config=PLOTLY_CONFIG)
 
     # =========================
     # Carga por demandante
@@ -878,7 +1244,7 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         )
         st.plotly_chart(
             style_horizontal_bar_with_labels(fig, height=560, x_pad=0.10),
-            use_container_width=True,
+            width='stretch',
             config=PLOTLY_CONFIG,
         )
 
@@ -894,7 +1260,7 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
             )
             st.plotly_chart(
                 style_pie_figure(fig),
-                use_container_width=True,
+                width='stretch',
                 config=PLOTLY_CONFIG,
             )
 
@@ -908,7 +1274,7 @@ def render_demandantes(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         }
     )
 
-    st.dataframe(tabela, use_container_width=True)
+    st.dataframe(tabela, width='stretch')
 
     with st.expander("Resumo de CAOP"):
         c1, c2, c3 = st.columns(3)
@@ -988,7 +1354,283 @@ def _build_aircraft_color_map(aircraft_names: list[str]) -> dict[str, str]:
 
     return color_map
 
-def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig) -> None:
+PT_MONTHS = {
+    1: "JAN", 2: "FEV", 3: "MAR", 4: "ABR", 5: "MAI", 6: "JUN",
+    7: "JUL", 8: "AGO", 9: "SET", 10: "OUT", 11: "NOV", 12: "DEZ",
+}
+
+def _build_aircraft_color_map(aircraft_names: list[str]) -> dict[str, str]:
+    from plotly.colors import qualitative
+
+    palette = (
+        qualitative.Plotly
+        + qualitative.Dark24
+        + qualitative.Light24
+        + qualitative.Alphabet
+        + qualitative.Safe
+        + qualitative.Vivid
+    )
+
+    unique_names = sorted(set(map(str, aircraft_names)))
+    return {name: palette[i % len(palette)] for i, name in enumerate(unique_names)}
+
+def _prepare_aircraft_availability_matrix(
+    base: pd.DataFrame,
+    cfg: ColumnConfig,
+    aircraft_order: list[str],
+) -> tuple[pd.DataFrame, list[str], str]:
+    work = base.dropna(subset=["_date", "_month_dt"]).copy()
+    work[cfg.aircraft] = work[cfg.aircraft].astype(str).str.strip()
+    work = work[work[cfg.aircraft].isin(aircraft_order)].copy()
+
+    if work.empty:
+        return pd.DataFrame(index=aircraft_order), [], "DISPONIBILIDADE MENSAL POR AERONAVE"
+
+    work["_day"] = work["_date"].dt.floor("D")
+
+    daily_presence = (
+        work.groupby([cfg.aircraft, "_month_dt", "_day"], dropna=False)
+        .size()
+        .reset_index(name="n")
+    )
+
+    monthly_presence = (
+        daily_presence.groupby([cfg.aircraft, "_month_dt"], dropna=False)
+        .size()
+        .reset_index(name="dias_utilizados")
+    )
+
+    years = sorted(work["_year"].dropna().astype(int).unique().tolist()) if "_year" in work.columns else []
+
+    if len(years) == 1:
+        all_months = pd.date_range(f"{years[0]}-01-01", f"{years[0]}-12-01", freq="MS")
+        title = f"DISPONIBILIDADE MENSAL POR AERONAVE - {years[0]}"
+        month_labels = [PT_MONTHS[m.month] for m in all_months]
+    else:
+        all_months = pd.to_datetime(sorted(work["_month_dt"].dropna().unique()))
+        title = "DISPONIBILIDADE MENSAL POR AERONAVE"
+        month_labels = [f"{PT_MONTHS[m.month]}/{str(m.year)[2:]}" for m in all_months]
+
+    full_grid = pd.MultiIndex.from_product(
+        [aircraft_order, all_months],
+        names=[cfg.aircraft, "_month_dt"],
+    ).to_frame(index=False)
+
+    matrix_df = full_grid.merge(
+        monthly_presence,
+        on=[cfg.aircraft, "_month_dt"],
+        how="left",
+    )
+
+    matrix_df["dias_utilizados"] = matrix_df["dias_utilizados"].fillna(0)
+    matrix_df["dias_mes"] = matrix_df["_month_dt"].dt.days_in_month
+    matrix_df["disponibilidade_pct"] = (
+        100.0 * matrix_df["dias_utilizados"] / matrix_df["dias_mes"]
+    ).fillna(0.0)
+
+    label_map = {m: lbl for m, lbl in zip(all_months, month_labels)}
+    matrix_df["_month_label"] = matrix_df["_month_dt"].map(label_map)
+
+    pivot = (
+        matrix_df.pivot(index=cfg.aircraft, columns="_month_label", values="disponibilidade_pct")
+        .reindex(index=aircraft_order, columns=month_labels)
+        .fillna(0.0)
+    )
+
+    return pivot, month_labels, title
+
+def _build_availability_heatmap(
+    pivot: pd.DataFrame,
+    month_labels: list[str],
+    title: str,
+) -> go.Figure:
+    if pivot.empty or len(month_labels) == 0:
+        fig = go.Figure()
+        fig.update_layout(
+            template="plotly_white",
+            title=title,
+            height=450,
+            annotations=[
+                dict(
+                    text="Sem dados suficientes para montar o mapa de disponibilidade.",
+                    x=0.5, y=0.5, xref="paper", yref="paper",
+                    showarrow=False, font=dict(size=18),
+                )
+            ],
+        )
+        return fig
+
+    z = pivot.to_numpy(dtype=float)
+    text = np.vectorize(lambda v: f"{int(round(v))}%")(z)
+
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=z,
+            x=month_labels,
+            y=pivot.index.tolist(),
+            colorscale=[
+                [0.00, "#f0f0f0"],
+                [0.15, "#dfe9df"],
+                [0.35, "#bdd8bd"],
+                [0.55, "#8dc28f"],
+                [0.75, "#5fb56b"],
+                [1.00, "#35a853"],
+            ],
+            zmin=0,
+            zmax=100,
+            text=text,
+            texttemplate="%{text}",
+            textfont={"size": 15, "color": "#111111"},
+            xgap=1,
+            ygap=1,
+            colorbar=dict(
+                title=dict(
+                    text="Disponibilidade (%)",
+                    font=dict(size=16),
+                ),
+                tickfont=dict(size=13),
+            ),
+            hovertemplate="<b>%{y}</b><br>Mês: %{x}<br>Disponibilidade observada: %{z:.0f}%<extra></extra>",
+        )
+    )
+
+    fig.update_layout(
+        template="plotly_white",
+        title=title,
+        title_font=dict(size=26),
+        font=dict(size=16),
+        height=max(520, 48 * len(pivot.index)),
+        margin=dict(l=30, r=30, t=80, b=30),
+        xaxis=dict(
+            title="",
+            tickfont=dict(size=13),
+            side="bottom",
+        ),
+        yaxis=dict(
+            title="",
+            tickfont=dict(size=14),
+            autorange="reversed",
+        ),
+    )
+
+    return fig
+
+def _enrich_with_uf_from_airports(base: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFrame]) -> pd.DataFrame:
+    out = base.copy()
+    out["_uf_dest"] = pd.NA
+
+    if airports is None or airports.empty or not cfg.icao_to or cfg.icao_to not in out.columns:
+        return out
+
+    ap = airports.copy()
+    if "icao" not in ap.columns and "ident" in ap.columns:
+        ap["icao"] = ap["ident"].astype(str).str.strip().str.upper()
+    else:
+        ap["icao"] = ap["icao"].astype(str).str.strip().str.upper()
+
+    uf_col = None
+    for c in ["state", "iso_region", "municipality_state", "uf"]:
+        if c in ap.columns:
+            uf_col = c
+            break
+
+    if uf_col is None:
+        return out
+
+    ap_map = ap[["icao", uf_col]].dropna().drop_duplicates(subset=["icao"], keep="last").copy()
+    ap_map.rename(columns={uf_col: "_uf_lookup"}, inplace=True)
+
+    out["_icao_to_norm"] = out[cfg.icao_to].astype(str).str.strip().str.upper()
+    out = out.merge(ap_map, left_on="_icao_to_norm", right_on="icao", how="left")
+
+    if "_uf_lookup" in out.columns:
+        if uf_col == "iso_region":
+            out["_uf_dest"] = out["_uf_lookup"].astype(str).str.split("-").str[-1]
+        else:
+            out["_uf_dest"] = out["_uf_lookup"]
+
+    out["_uf_dest"] = out["_uf_dest"].astype(str).str.strip().replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+    return out
+
+
+def _monthly_group_for_aircraft_selection(base_sel: pd.DataFrame, cfg: ColumnConfig) -> pd.DataFrame:
+    return (
+        base_sel.dropna(subset=["_month_dt"])
+        .groupby(["_month_dt", "_month"], dropna=False)
+        .agg(
+            trechos=(cfg.aircraft, "size"),
+            passageiros_total=("_passengers", "sum"),
+            presos_total=("_prisoners", "sum"),
+            carga_total_kg=("_cargo", "sum"),
+            ttv_total=("_ttv", "sum"),
+        )
+        .reset_index()
+        .sort_values("_month_dt")
+    )
+
+
+def _operations_summary_for_subset(df: pd.DataFrame, cfg: ColumnConfig) -> tuple[dict[str, float], float]:
+    if not cfg.op_metrics:
+        return {}, 0.0
+
+    raw_values: dict[str, float] = {}
+    for col in cfg.op_metrics:
+        if col not in df.columns:
+            continue
+        value, _ = count_or_sum(df[col])
+        val = pd.to_numeric(pd.Series([value]), errors="coerce").fillna(0).iloc[0]
+        raw_values[col] = float(val)
+
+    obs_col = "OBS (IMA + REC) (1 por dia)"
+    int_col = "INT (1 por dia)"
+    mob_col = "MOBILIZAÇÃO (POR NOME DA OPERAÇÃO, unidade apoiada, serviço especializado)"
+    destr_err_col = "DESTRUIÇÃO + ERRADICAÇÃO (1 POR DIA CADA)"
+    err_col = "ERR (NOME DA OPERAÇÃO)"
+
+    erradicacao = raw_values.get(err_col, 0.0)
+    destruicao_e_erradicacao = raw_values.get(destr_err_col, 0.0)
+    destruicao = max(destruicao_e_erradicacao - erradicacao, 0.0)
+
+    summary = {
+        "Observação": raw_values.get(obs_col, 0.0),
+        "Intervenção": raw_values.get(int_col, 0.0),
+        "Mobilização": raw_values.get(mob_col, 0.0),
+        "Destruição": destruicao,
+        "Erradicação": erradicacao,
+    }
+    total = float(sum(summary.values()))
+    return summary, total
+
+
+def _pie_bar_pair(df_top: pd.DataFrame, label_col: str, value_col: str, title_base: str, value_label: str):
+    c1, c2 = st.columns(2)
+
+    with c1:
+        pie_df = prepare_pie_dataframe(df_top, label_col, value_col)
+        if not pie_df.empty:
+            fig = px.pie(
+                pie_df,
+                names=label_col,
+                values=value_col,
+                hole=0.35,
+                title=f"{title_base} (%)",
+            )
+            st.plotly_chart(style_pie_figure(fig, 480), width="stretch", config=PLOTLY_CONFIG)
+
+    with c2:
+        fig = px.bar(
+            df_top.sort_values(value_col, ascending=True),
+            x=value_col,
+            y=label_col,
+            orientation="h",
+            title=title_base,
+            labels={value_col: value_label, label_col: ""},
+            text_auto=".0f",
+        )
+        st.plotly_chart(style_horizontal_bar_with_labels(fig, 480, 0.10), width="stretch", config=PLOTLY_CONFIG)
+
+
+def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFrame] = None) -> None:
     st.subheader("Aeronaves")
 
     if not cfg.aircraft or cfg.aircraft not in df.columns:
@@ -1000,24 +1642,36 @@ def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         return
 
     base = _prepare_aircraft_base(df, cfg)
-
     if base.empty:
         st.warning("Não há aeronaves válidas no filtro atual.")
         return
 
+    base = _enrich_with_uf_from_airports(base, cfg, airports)
     grouped = _aircraft_grouped(base, cfg)
+    aircraft_options = grouped[cfg.aircraft].astype(str).tolist()
 
-    total_aeronaves = grouped[cfg.aircraft].nunique()
-    total_trechos = int(grouped["trechos"].sum())
-    total_ttv = float(grouped["ttv_total"].sum())
-    total_passag = float(grouped["passageiros_total"].sum())
-    total_presos = float(grouped["presos_total"].sum())
-    total_carga = float(grouped["carga_total_kg"].sum())
-
-    # =========================================================
-    # 1) VISÃO GERAL DA FROTA
-    # =========================================================
     st.markdown("### 1) Visão geral da frota")
+
+    selected_general = st.multiselect(
+        "Escolha uma ou mais aeronaves para a visão geral",
+        options=aircraft_options,
+        default=aircraft_options,
+        key="aircraft_selected_general",
+    )
+
+    if not selected_general:
+        st.warning("Selecione ao menos uma aeronave na visão geral.")
+        return
+
+    base_general = base[base[cfg.aircraft].astype(str).isin(selected_general)].copy()
+    grouped_general = _aircraft_grouped(base_general, cfg)
+
+    total_aeronaves = grouped_general[cfg.aircraft].nunique()
+    total_trechos = int(grouped_general["trechos"].sum())
+    total_ttv = float(grouped_general["ttv_total"].sum())
+    total_passag = float(grouped_general["passageiros_total"].sum())
+    total_presos = float(grouped_general["presos_total"].sum())
+    total_carga = float(grouped_general["carga_total_kg"].sum())
 
     k1, k2, k3, k4, k5, k6 = st.columns(6)
     k1.metric("Aeronaves no filtro", _format_int(total_aeronaves))
@@ -1029,111 +1683,60 @@ def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig) -> None:
 
     top_n = st.slider(
         "Top N de aeronaves na visão geral",
-        min_value=5,
-        max_value=min(30, max(5, len(grouped))),
-        value=min(10, max(5, len(grouped))),
+        min_value=1,
+        max_value=max(1, len(grouped_general)),
+        value=min(10, max(1, len(grouped_general))),
         step=1,
         key="aircraft_top_n_general",
     )
 
-    top_ttv = grouped.nlargest(top_n, "ttv_total")[[cfg.aircraft, "ttv_total"]].copy()
-    top_pass = grouped.nlargest(top_n, "passageiros_total")[[cfg.aircraft, "passageiros_total"]].copy()
-    top_carga = grouped.nlargest(top_n, "carga_total_kg")[[cfg.aircraft, "carga_total_kg"]].copy()
+    top_ttv = grouped_general.nlargest(top_n, "ttv_total")[[cfg.aircraft, "ttv_total"]].copy()
+    top_pass = grouped_general.nlargest(top_n, "passageiros_total")[[cfg.aircraft, "passageiros_total"]].copy()
+    top_carga = grouped_general.nlargest(top_n, "carga_total_kg")[[cfg.aircraft, "carga_total_kg"]].copy()
 
-    c1, c2 = st.columns(2)
-    with c1:
-        pie_df = prepare_pie_dataframe(top_ttv, cfg.aircraft, "ttv_total")
-        fig = px.pie(
-            pie_df,
-            names=cfg.aircraft,
-            values="ttv_total",
-            hole=0.35,
-            title="AERONAVES COM MAIS HORAS DE VOO",
-        )
-        st.plotly_chart(
-            style_pie_figure(fig, 480),
-            use_container_width=True,
-            config=PLOTLY_CONFIG,
-        )
-    with c2:
-        fig = px.bar(
-            top_ttv.sort_values("ttv_total", ascending=True),
-            x="ttv_total",
-            y=cfg.aircraft,
-            orientation="h",
-            title="HORAS DE VOO POR AERONAVE",
-            labels={"ttv_total": "Horas de voo (TTV)", cfg.aircraft: "Aeronave"},
-            text_auto=".1f",
-        )
-        st.plotly_chart(
-            style_plotly_figure(fig, 480),
-            use_container_width=True,
-            config=PLOTLY_CONFIG,
-        )
+    _pie_bar_pair(top_ttv, cfg.aircraft, "ttv_total", "Horas de voo por aeronave", "Horas de voo (TTV)")
+    _pie_bar_pair(top_pass, cfg.aircraft, "passageiros_total", "Passageiros transportados por aeronave", "Passageiros")
+    _pie_bar_pair(top_carga, cfg.aircraft, "carga_total_kg", "Carga transportada por aeronave", "Carga (kg)")
 
-    c3, c4 = st.columns(2)
-    with c3:
-        pie_df = prepare_pie_dataframe(top_pass, cfg.aircraft, "passageiros_total")
-        fig = px.pie(
-            pie_df,
-            names=cfg.aircraft,
-            values="passageiros_total",
-            hole=0.35,
-            title="AERONAVES COM MAIS PASSAGEIROS TRANSPORTADOS",
+    if "_uf_dest" in base_general.columns:
+        uf_df = (
+            base_general.dropna(subset=["_uf_dest"])
+            .groupby("_uf_dest", dropna=False)
+            .size()
+            .reset_index(name="trechos")
+            .rename(columns={"_uf_dest": "UF"})
+            .sort_values("trechos", ascending=False)
+            .head(top_n)
         )
-        st.plotly_chart(
-            style_pie_figure(fig, 480),
-            use_container_width=True,
-            config=PLOTLY_CONFIG,
-        )
-    with c4:
-        fig = px.bar(
-            top_pass.sort_values("passageiros_total", ascending=True),
-            x="passageiros_total",
-            y=cfg.aircraft,
-            orientation="h",
-            title="PASSAGEIROS TRASNPORTADOS POR AERONAVE",
-            labels={"passageiros_total": "Passageiros", cfg.aircraft: "Aeronave"},
-            text_auto=".0f",
-        )
-        st.plotly_chart(
-            style_plotly_figure(fig, 480),
-            use_container_width=True,
-            config=PLOTLY_CONFIG,
-        )
+        if not uf_df.empty:
+            _pie_bar_pair(uf_df, "UF", "trechos", "Unidades da federação atendidas", "Trechos")
 
-    c5, c6 = st.columns(2)
-    with c5:
-        pie_df = prepare_pie_dataframe(top_carga, cfg.aircraft, "carga_total_kg")
-        fig = px.pie(
-            pie_df,
-            names=cfg.aircraft,
-            values="carga_total_kg",
-            hole=0.35,
-            title="AERONAVES COM MAIS CARGAS TRANSPORTADAS",
+    if "_nat_label" in base_general.columns:
+        nat_df = (
+            base_general.dropna(subset=["_nat_label"])
+            .groupby("_nat_label", dropna=False)
+            .size()
+            .reset_index(name="trechos")
+            .rename(columns={"_nat_label": "Natureza da missão"})
+            .sort_values("trechos", ascending=False)
+            .head(top_n)
         )
-        st.plotly_chart(
-            style_pie_figure(fig, 480),
-            use_container_width=True,
-            config=PLOTLY_CONFIG,
-        )
-    with c6:
-        fig = px.bar(
-            top_carga.sort_values("carga_total_kg", ascending=True),
-            x="carga_total_kg",
-            y=cfg.aircraft,
-            orientation="h",
-            title="CARGAS TRANSPORTADA POR AERONAVE",
-            labels={"carga_total_kg": "Carga (kg)", cfg.aircraft: "Aeronave"},
-            text_auto=".1f",
-        )
-        st.plotly_chart(
-            style_plotly_figure(fig, 480),
-            use_container_width=True,
-            config=PLOTLY_CONFIG,
-        )
+        if not nat_df.empty:
+            _pie_bar_pair(nat_df, "Natureza da missão", "trechos", "Natureza da missão", "Trechos")
 
-    show_table = grouped.rename(columns={
+    if "_espec_label" in base_general.columns:
+        espec_df = (
+            base_general.dropna(subset=["_espec_label"])
+            .groupby("_espec_label", dropna=False)
+            .size()
+            .reset_index(name="trechos")
+            .rename(columns={"_espec_label": "Especificação da missão"})
+            .sort_values("trechos", ascending=False)
+        )
+        if not espec_df.empty:
+            _pie_bar_pair(espec_df, "Especificação da missão", "trechos", "Especificação da missão", "Trechos")
+
+    show_table = grouped_general.rename(columns={
         cfg.aircraft: "Aeronave",
         "asa_label": "Tipo",
         "trechos": "Trechos",
@@ -1142,141 +1745,70 @@ def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         "presos_total": "Presos",
         "carga_total_kg": "Carga (kg)",
     })
-    st.dataframe(show_table, use_container_width=True)
+    st.dataframe(show_table, width="stretch")
 
     st.divider()
 
-    # =========================================================
-    # 2) FOCO EM UMA AERONAVE ESPECÍFICA
-    # =========================================================
-    st.markdown("### 2) Foco em uma aeronave específica")
+    st.markdown("### 2) Foco em uma ou mais aeronaves")
 
-    selected = st.selectbox(
-        "Selecione a aeronave",
-        options=grouped[cfg.aircraft].astype(str).tolist(),
-        key="aircraft_selected_detail",
+    selected_detail = st.multiselect(
+        "Escolha uma ou mais aeronaves para o foco detalhado",
+        options=aircraft_options,
+        default=aircraft_options[:1] if aircraft_options else [],
+        key="aircraft_selected_detail_multi",
     )
 
-    sub = base[base[cfg.aircraft].astype(str) == str(selected)].copy()
-    monthly_aircraft = _monthly_aircraft_metrics(sub, cfg)
+    if not selected_detail:
+        st.warning("Selecione ao menos uma aeronave para o detalhamento.")
+        return
+
+    sub = base[base[cfg.aircraft].astype(str).isin(selected_detail)].copy()
+    monthly_aircraft = _monthly_group_for_aircraft_selection(sub, cfg)
+    _, total_ops_exec = _operations_summary_for_subset(sub, cfg)
 
     d1, d2, d3, d4, d5, d6 = st.columns(6)
-    d1.metric("Aeronave", str(selected))
+    d1.metric("Aeronaves selecionadas", _format_int(len(selected_detail)))
     d2.metric("Trechos", _format_int(len(sub)))
     d3.metric("Passageiros", _format_int(int(sub["_passengers"].sum())))
     d4.metric("Presos", _format_int(int(sub["_prisoners"].sum())))
     d5.metric("Carga (kg)", _format_float_br(float(sub["_cargo"].sum())))
-    d6.metric("Horas de voo (TTV)", _format_float_br(float(sub["_ttv"].sum())))
+    d6.metric("Operações executadas", _format_int(int(round(total_ops_exec))))
+
+    d7, d8 = st.columns(2)
+    d7.metric("Horas de voo (TTV)", _format_float_br(float(sub["_ttv"].sum())))
+    d8.metric("Média por aeronave (TTV)", _format_float_br(float(sub["_ttv"].sum()) / max(len(selected_detail), 1)))
 
     if monthly_aircraft.empty:
-        st.info("Essa aeronave não possui datas válidas para montar a evolução mensal.")
+        st.info("As aeronaves selecionadas não possuem datas válidas para montar a evolução mensal.")
     else:
         fig = go.Figure()
+        fig.add_trace(go.Scatter(x=monthly_aircraft["_month"], y=monthly_aircraft["passageiros_total"], mode="lines+markers", name="Passageiros", line=dict(width=4, shape="spline", smoothing=1.0), marker=dict(size=8), yaxis="y1", hovertemplate="<b>Passageiros</b><br>Mês: %{x}<br>Total: %{y:.0f}<extra></extra>"))
+        fig.add_trace(go.Scatter(x=monthly_aircraft["_month"], y=monthly_aircraft["presos_total"], mode="lines+markers", name="Presos", line=dict(width=4, shape="spline", smoothing=1.0), marker=dict(size=8), yaxis="y1", hovertemplate="<b>Presos</b><br>Mês: %{x}<br>Total: %{y:.0f}<extra></extra>"))
+        fig.add_trace(go.Scatter(x=monthly_aircraft["_month"], y=monthly_aircraft["carga_total_kg"], mode="lines+markers", name="Carga (kg)", line=dict(width=4, shape="spline", smoothing=1.0), marker=dict(size=8), yaxis="y2", hovertemplate="<b>Carga</b><br>Mês: %{x}<br>Total: %{y:.1f} kg<extra></extra>"))
+        fig.add_trace(go.Scatter(x=monthly_aircraft["_month"], y=monthly_aircraft["ttv_total"], mode="lines+markers", name="Horas de voo (TTV)", line=dict(width=4, shape="spline", smoothing=1.0), marker=dict(size=8), yaxis="y1", hovertemplate="<b>TTV</b><br>Mês: %{x}<br>Total: %{y:.1f} h<extra></extra>"))
 
-        # 1) Passageiros
-        fig.add_trace(
-            go.Scatter(
-                x=monthly_aircraft["_month"],
-                y=monthly_aircraft["passageiros_total"],
-                mode="lines+markers+text",
-                name="Passageiros",
-                text=monthly_aircraft["passageiros_total"].fillna(0).round(0).astype(int),
-                textposition="top center",
-                hovertemplate="<b>Passageiros</b><br>Mês: %{x}<br>Total: %{y:.0f}<extra></extra>",
-                yaxis="y1",
-            )
-        )
-
-        # 2) Presos
-        fig.add_trace(
-            go.Scatter(
-                x=monthly_aircraft["_month"],
-                y=monthly_aircraft["presos_total"],
-                mode="lines+markers+text",
-                name="Presos",
-                text=monthly_aircraft["presos_total"].fillna(0).round(0).astype(int),
-                textposition="top center",
-                hovertemplate="<b>Presos</b><br>Mês: %{x}<br>Total: %{y:.0f}<extra></extra>",
-                yaxis="y1",
-            )
-        )
-
-        # 3) Carga
-        fig.add_trace(
-            go.Scatter(
-                x=monthly_aircraft["_month"],
-                y=monthly_aircraft["carga_total_kg"],
-                mode="lines+markers+text",
-                name="Carga (kg)",
-                text=monthly_aircraft["carga_total_kg"].fillna(0).round(1),
-                textposition="top center",
-                hovertemplate="<b>Carga</b><br>Mês: %{x}<br>Total: %{y:.1f} kg<extra></extra>",
-                yaxis="y2",
-            )
-        )
-
-        # 4) TTV
-        fig.add_trace(
-            go.Scatter(
-                x=monthly_aircraft["_month"],
-                y=monthly_aircraft["ttv_total"],
-                mode="lines+markers+text",
-                name="Horas de voo (TTV)",
-                text=monthly_aircraft["ttv_total"].fillna(0).round(1),
-                textposition="top center",
-                hovertemplate="<b>TTV</b><br>Mês: %{x}<br>Total: %{y:.1f} h<extra></extra>",
-                yaxis="y1",
-            )
-        )
+        left_max = max(1, float(monthly_aircraft[["passageiros_total", "presos_total", "ttv_total"]].fillna(0).to_numpy().max()))
+        right_max = max(1, float(monthly_aircraft["carga_total_kg"].fillna(0).max()))
 
         fig.update_layout(
-            title=f"EVOLULÇÃO MENSAL CONSOLIDADA — {selected}",
-            xaxis=dict(
-                title="Mês",
-                tickangle=-35,
-            ),
-            yaxis=dict(
-                title="Passageiros / Presos / Horas de voo",
-                side="left",
-                showgrid=True,
-            ),
-            yaxis2=dict(
-                title="Carga (kg)",
-                overlaying="y",
-                side="right",
-                showgrid=False,
-            ),
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="left",
-                x=0,
-            ),
-            height=560,
-            title_font_size=22,
+            template="plotly_white",
+            title=f"Evolução mensal consolidada — {', '.join(selected_detail)}",
+            xaxis=dict(title="Mês", tickangle=-35),
+            yaxis=dict(title="Passageiros / Presos / Horas de voo", side="left", showgrid=True, range=[0, left_max * 1.10], rangemode="tozero"),
+            yaxis2=dict(title="Carga (kg)", overlaying="y", side="right", showgrid=False, range=[0, right_max * 1.10], rangemode="tozero"),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+            height=620,
+            title_font=dict(size=24),
             font=dict(size=16),
-            margin=dict(l=20, r=20, t=90, b=20),
+            margin=dict(l=30, r=30, t=90, b=30),
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
 
-        detail_table = monthly_aircraft.rename(columns={
-            "_month": "Mês",
-            "trechos": "Trechos",
-            "passageiros_total": "Passageiros",
-            "presos_total": "Presos",
-            "carga_total_kg": "Carga (kg)",
-            "ttv_total": "Horas de voo (TTV)",
-        })[["Mês", "Trechos", "Passageiros", "Presos", "Carga (kg)", "Horas de voo (TTV)"]]
-
-        st.dataframe(detail_table, use_container_width=True)
+        detail_table = monthly_aircraft.rename(columns={"_month": "Mês", "trechos": "Trechos", "passageiros_total": "Passageiros", "presos_total": "Presos", "carga_total_kg": "Carga (kg)", "ttv_total": "Horas de voo (TTV)"})[["Mês", "Trechos", "Passageiros", "Presos", "Carga (kg)", "Horas de voo (TTV)"]]
+        st.dataframe(detail_table, width="stretch")
 
     st.divider()
-
-    # =========================================================
-    # 3) DISPONIBILIDADE / COMPARATIVO MENSAL
-    # =========================================================
     st.markdown("### 3) Disponibilidade e uso mensal das aeronaves")
 
     fleet_monthly = (
@@ -1291,125 +1823,54 @@ def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig) -> None:
         st.info("Não foi possível calcular a evolução mensal da frota porque não há datas válidas.")
         return
 
-    aircraft_options = sorted(fleet_monthly[cfg.aircraft].astype(str).unique().tolist())
-    default_aircraft = aircraft_options.copy()
+    st.markdown("#### 3.1) Horas de voo por mês e por aeronave")
+    selected_for_line = st.multiselect("Escolha quais aeronaves aparecem no gráfico de linhas", options=aircraft_options, default=aircraft_options, key="aircraft_visible_monthly_line_chart")
 
-    selected_for_chart = st.multiselect(
-        "Escolha quais aeronaves aparecem no gráfico mensal",
-        options=aircraft_options,
-        default=default_aircraft,
-        key="aircraft_visible_monthly_chart",
-    )
+    if selected_for_line:
+        fleet_monthly_line = fleet_monthly[fleet_monthly[cfg.aircraft].astype(str).isin(selected_for_line)].copy()
+        fig_line = go.Figure()
+        color_map = _build_aircraft_color_map(selected_for_line)
 
-    fleet_monthly = fleet_monthly[fleet_monthly[cfg.aircraft].astype(str).isin(selected_for_chart)].copy()
+        for ac in selected_for_line:
+            sub_ac = fleet_monthly_line[fleet_monthly_line[cfg.aircraft].astype(str) == ac].copy()
+            if sub_ac.empty:
+                continue
+            asa_tipo = str(sub_ac["_asa"].dropna().astype(str).iloc[0]) if sub_ac["_asa"].dropna().shape[0] else ""
+            dash_style = "solid" if asa_tipo == "F" else "dash" if asa_tipo == "R" else "dot"
+            marker_symbol = "circle" if asa_tipo == "F" else "diamond" if asa_tipo == "R" else "square"
+            asa_label = "Asa fixa" if asa_tipo == "F" else "Asa rotativa" if asa_tipo == "R" else "Não informado"
+            fig_line.add_trace(go.Scatter(x=sub_ac["_month"], y=sub_ac["ttv_total"], mode="lines+markers", name=f"{ac} ({asa_label})", line=dict(width=4, dash=dash_style, color=color_map[ac], shape="spline", smoothing=1.0), marker=dict(size=7, color=color_map[ac], symbol=marker_symbol), hovertemplate="<b>%{fullData.name}</b><br>Mês: %{x}<br>TTV: %{y:.1f}<extra></extra>"))
 
-    if fleet_monthly.empty:
-        st.warning("Nenhuma aeronave foi selecionada para o gráfico.")
-        return
+        fig_line.update_layout(template="plotly_white", title="Horas de voo por mês e por aeronave", xaxis_title="Mês", yaxis_title="Horas de voo (TTV)", xaxis_tickangle=-35, height=560, title_font=dict(size=24), font=dict(size=16), legend=dict(font=dict(size=13)), margin=dict(l=30, r=30, t=80, b=30))
+        st.plotly_chart(fig_line, width="stretch", config=PLOTLY_CONFIG)
+    else:
+        st.warning("Nenhuma aeronave foi selecionada para o gráfico de linhas.")
 
-    fig = go.Figure()
+    st.divider()
+    st.markdown("#### 3.2) Heatmap de disponibilidade mensal")
+    selected_for_heatmap = st.multiselect("Escolha quais aeronaves aparecem no heatmap", options=aircraft_options, default=aircraft_options, key="aircraft_visible_availability_heatmap")
 
-    aircraft_list_for_colors = sorted(fleet_monthly[cfg.aircraft].astype(str).unique().tolist())
-    color_map = _build_aircraft_color_map(aircraft_list_for_colors)
-
-    for ac in aircraft_list_for_colors:
-        sub_ac = fleet_monthly[fleet_monthly[cfg.aircraft].astype(str) == ac].copy()
-        asa_tipo = str(sub_ac["_asa"].dropna().astype(str).iloc[0]) if sub_ac["_asa"].dropna().shape[0] else ""
-        dash_style = "solid" if asa_tipo == "F" else "dash" if asa_tipo == "R" else "dot"
-        asa_label = "Asa fixa" if asa_tipo == "F" else "Asa rotativa" if asa_tipo == "R" else "Não informado"
-
-        fig.add_trace(
-            go.Scatter(
-                x=sub_ac["_month"],
-                y=sub_ac["ttv_total"],
-                mode="lines+markers",
-                name=f"{ac} ({asa_label})",
-                line=dict(
-                    width=3,
-                    dash=dash_style,
-                    color=color_map[ac],
-                ),
-                marker=dict(
-                    size=7,
-                    color=color_map[ac],
-                ),
-                hovertemplate="<b>%{fullData.name}</b><br>Mês: %{x}<br>TTV: %{y:.1f}<extra></extra>",
-            )
-        )
-
-    fig.update_layout(
-        title="HORAS DE VOO POR AERONAVE POR MÊS",
-        xaxis_title="Mês",
-        yaxis_title="Horas de voo (TTV)",
-        xaxis_tickangle=-35,
-    )
-    st.plotly_chart(_update_fig_layout(fig, 560), use_container_width=True)
-
-    disp_month = (
-        base.dropna(subset=["_month_dt"])
-        .groupby(["_month_dt", "_month"], dropna=False)
-        .agg(
-            aeronaves_ativas=(cfg.aircraft, lambda s: s.astype(str).nunique()),
-            trechos=(cfg.aircraft, "size"),
-            ttv_total=("_ttv", "sum"),
-        )
-        .reset_index()
-        .sort_values("_month_dt")
-    )
-    disp_month["disponibilidade_observada_pct"] = disp_month["aeronaves_ativas"] / total_aeronaves * 100.0
-
-    c1, c2 = st.columns(2)
-    with c1:
-        fig2 = px.bar(
-            disp_month,
-            x="_month",
-            y="aeronaves_ativas",
-            title="AERONAVES ATIVAS POR MÊS",
-            labels={"_month": "Mês", "aeronaves_ativas": "Aeronaves ativas"},
-            text_auto=".0f",
-        )
-        fig2.update_layout(xaxis_tickangle=-35)
-        st.plotly_chart(_update_fig_layout(fig2), use_container_width=True)
-
-    with c2:
-        fig3 = px.line(
-            disp_month,
-            x="_month",
-            y="disponibilidade_observada_pct",
-            markers=True,
-            title="DISPONIBILIDADE OBSERVADA DA FROTA POR MÊS",
-            labels={"_month": "Mês", "disponibilidade_observada_pct": "Disponibilidade (%)"},
-        )
-        fig3.update_layout(xaxis_tickangle=-35)
-        st.plotly_chart(_update_fig_layout(fig3), use_container_width=True)
-
-    peak = disp_month.loc[disp_month["aeronaves_ativas"].idxmax()]
-    low = disp_month.loc[disp_month["aeronaves_ativas"].idxmin()]
-    peak_ttv = disp_month.loc[disp_month["ttv_total"].idxmax()]
-
-    st.markdown(
-        f"""
-A disponibilidade observada foi calculada a partir das aeronaves que efetivamente apareceram em trechos registrados em cada mês.
-
-O pico de disponibilidade ocorreu em **{peak['_month']}**, com **{int(peak['aeronaves_ativas'])} aeronaves ativas**
-(**{peak['disponibilidade_observada_pct']:.1f}%** da frota no filtro).
-
-O menor nível ocorreu em **{low['_month']}**, com **{int(low['aeronaves_ativas'])} aeronaves ativas**
-(**{low['disponibilidade_observada_pct']:.1f}%**).
-
-Já o mês de maior intensidade operacional foi **{peak_ttv['_month']}**, com **{peak_ttv['ttv_total']:.1f} horas de voo**
-e **{int(peak_ttv['trechos'])} trechos**.
-        """
-    )
+    if selected_for_heatmap:
+        pivot, month_labels, heatmap_title = _prepare_aircraft_availability_matrix(base=base, cfg=cfg, aircraft_order=selected_for_heatmap)
+        fig_heat = _build_availability_heatmap(pivot=pivot, month_labels=month_labels, title=heatmap_title)
+        st.plotly_chart(fig_heat, width="stretch", config=PLOTLY_CONFIG)
+        st.caption("Disponibilidade observada = percentual de dias do mês em que a aeronave apareceu em pelo menos um trecho.")
+    else:
+        st.warning("Nenhuma aeronave foi selecionada para o heatmap.")
 
 def render_debug(df: pd.DataFrame, cfg: ColumnConfig) -> None:
     st.subheader("Dados (debug)")
     st.write("Linhas filtradas:", len(df))
     st.write("Mapeamento automático usado:", cfg)
-    st.dataframe(df.head(200), use_container_width=True)
+
+    show_debug = st.checkbox("Exibir amostra dos dados filtrados", value=False, key="show_debug_sample")
+    if show_debug:
+        debug_rows = st.slider("Quantidade de linhas na amostra", min_value=20, max_value=300, value=80, step=20, key="debug_rows")
+        st.dataframe(df.head(debug_rows), width="stretch")
 
 def main() -> None:
     st.title("CAOP - DASHBOARD ESTATÍSTICO")
+    apply_global_style()
 
     with st.sidebar:
         st.header("Arquivo")
@@ -1435,7 +1896,7 @@ def main() -> None:
     with st.sidebar:
         st.header("Mapa")
         try:
-            airports = load_airports(data_dir="data")
+            airports = load_airports_cached(data_dir="data")
             st.success("Base de aeroportos carregada automaticamente da pasta data/.")
         except Exception as e:
             airports = None
@@ -1469,7 +1930,7 @@ def main() -> None:
     with tabs[3]:
         render_demandantes(df_filtered, column_cfg)
     with tabs[4]:
-        render_aircraft(df_filtered, column_cfg)
+        render_aircraft(df_filtered, column_cfg, airports)
     with tabs[5]:
         render_debug(df_filtered, column_cfg)
 

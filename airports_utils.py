@@ -6,6 +6,40 @@ from typing import Iterable, Optional
 import pandas as pd
 
 
+def _coerce_bool_series(series: pd.Series) -> pd.Series:
+    def _coerce_one(value):
+        if value is None:
+            return False
+        try:
+            if pd.isna(value):
+                return False
+        except Exception:
+            pass
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return bool(value)
+        text = str(value).strip().lower()
+        if text in {"true", "1", "sim", "yes", "y", "t"}:
+            return True
+        if text in {"false", "0", "nao", "não", "no", "n", "f", ""}:
+            return False
+        return bool(value)
+
+    return series.map(_coerce_one).astype(bool)
+
+
+def _read_airports_csv(path: Path) -> pd.DataFrame:
+    header = pd.read_csv(path, nrows=0)
+    preferred_cols = [
+        "id", "ident", "icao", "icao_code", "gps_code", "local_code",
+        "type", "name", "latitude_deg", "longitude_deg", "iso_country",
+        "iso_region", "municipality", "state", "is_caop",
+    ]
+    usecols = [col for col in preferred_cols if col in header.columns]
+    return pd.read_csv(path, usecols=usecols if usecols else None)
+
+
 # Ajuste aqui a lista "fixa" de aeroportos da CAOP.
 # Tudo que estiver aqui será marcado com is_caop=True ao carregar a base.
 CAOP_AIRPORTS = {
@@ -88,7 +122,7 @@ def standardize_airports_df(df: pd.DataFrame) -> pd.DataFrame:
     if "is_caop" not in out.columns:
         out["is_caop"] = False
 
-    out["is_caop"] = out["is_caop"].fillna(False).astype(bool)
+    out["is_caop"] = _coerce_bool_series(out["is_caop"])
     out.loc[out["icao"].isin(CAOP_AIRPORTS), "is_caop"] = True
 
     out = out.drop_duplicates(subset=["icao"], keep="first")
@@ -119,23 +153,26 @@ def apply_overrides(airports: pd.DataFrame, overrides: Optional[pd.DataFrame]) -
 
     ov["latitude_deg"] = pd.to_numeric(ov["latitude_deg"], errors="coerce")
     ov["longitude_deg"] = pd.to_numeric(ov["longitude_deg"], errors="coerce")
-    ov["is_caop"] = ov["is_caop"].fillna(False).astype(bool)
+    ov["is_caop"] = _coerce_bool_series(ov["is_caop"])
 
     base = base.set_index("icao", drop=False)
+    ov = ov.drop_duplicates(subset=["icao"], keep="last").set_index("icao", drop=False)
 
-    for _, row in ov.iterrows():
-        icao = row["icao"]
-        if icao in base.index:
-            for col in ["latitude_deg", "longitude_deg", "iso_country", "name", "municipality", "is_caop"]:
-                val = row[col]
-                if pd.notna(val) and val != "":
-                    base.loc[icao, col] = val
-        else:
-            new_row = {col: None for col in base.columns}
-            for col in ["icao", "latitude_deg", "longitude_deg", "iso_country", "name", "municipality", "is_caop"]:
-                if col in new_row:
-                    new_row[col] = row[col]
-            base.loc[icao] = new_row
+    all_index = base.index.union(ov.index)
+    base = base.reindex(all_index)
+    ov = ov.reindex(all_index)
+
+    for col in ["icao", "latitude_deg", "longitude_deg", "iso_country", "name", "municipality", "is_caop"]:
+        if col not in base.columns:
+            base[col] = pd.NA
+        if col not in ov.columns:
+            ov[col] = pd.NA
+
+    for col in ["icao", "latitude_deg", "longitude_deg", "iso_country", "name", "municipality"]:
+        base[col] = ov[col].combine_first(base[col])
+
+    base["is_caop"] = ov["is_caop"].combine_first(base["is_caop"])
+    base["is_caop"] = _coerce_bool_series(base["is_caop"])
 
     out = base.reset_index(drop=True)
     out.loc[out["icao"].isin(CAOP_AIRPORTS), "is_caop"] = True
@@ -168,7 +205,7 @@ def load_airports(
         base_path = data_dir / "airports.csv"
 
     if base_path is not None and base_path.exists():
-        airports = pd.read_csv(base_path)
+        airports = _read_airports_csv(base_path)
     elif allow_download:
         airports = pd.read_csv("https://ourairports.com/data/airports.csv")
     else:
@@ -251,7 +288,8 @@ def classify_icao_points(
     if not mapped.empty:
         mapped["point_category"] = "Brasil"
         mapped.loc[mapped["iso_country"].fillna("").astype(str).str.upper().ne("BR"), "point_category"] = "Exterior"
-        mapped.loc[mapped["is_caop"].fillna(False).astype(bool), "point_category"] = "CAOP"
+        mapped["is_caop"] = _coerce_bool_series(mapped["is_caop"])
+        mapped.loc[mapped["is_caop"], "point_category"] = "CAOP"
 
     ignored = pd.DataFrame(ignored_rows)
     if not ignored.empty:
