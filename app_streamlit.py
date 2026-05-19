@@ -103,27 +103,28 @@ NAT_MAP = {
 ESPEC_MAP = {
     "CQ": "Cheque / Recheque",
     "TN": "Treinamento",
-    "EX": "Voo de experiência para manutenção",
-    "SPF": "Transporte de servidores da PF",
-    "SFN": "Transporte de servidores da FNSP",
-    "SDE": "Transporte de servidores do DEPEN",
-    "SOO": "Transporte de servidores de outro órgão",
-    "ERR": "Erradicação",
-    "DES": "Destruição de máquinas / equipamentos",
+    "EX": "Voo de experiência",
+    "SPF": "Servidores Polícia Federal",
+    "SFN": "Servidores Força Nacional",
+    "SDE": "Servidores DEPEN",
+    "SOO": "Servidores de outros órgãos",
+    "ERR": "Erradicação de cultivos ilícitos",
     "ESC": "Escolta aérea",
-    "ESP": "Transporte de presos da PF",
-    "ESD": "Transporte de presos do DEPEN",
-    "ESO": "Transporte de presos de outro órgão",
-    "IMA": "Serviço de imageamento",
-    "INT": "Efetivo emprego dos operadores aerotáticos",
-    "LPQ": "Lançamento de paraquedistas",
-    "REC": "Serviço de vigilância aérea ou reconhecimento",
-    "EVT": "Cerimônias / apresentação institucional",
-    "RES": "Resgate de vítimas",
-    "TRP": "Somente tripulação a bordo",
-    "TRM": "Ida / volta de manutenção fora de sede",
-    "TRO": "Treinamento de operadores / outros a bordo",
-    "TCE": "Transporte de carga exclusiva",
+    "ESP": "Escolta de presos PF",
+    "ESD": "Escolta de presos DEPEN",
+    "ESO": "Escolta presos outro órgão",
+    "IMA": "Imageamento",
+    "INT": "Intervenção policial",
+    "LPQ": "LPQD",
+    "REC": "Apoio / reconhecimento - levantamento / evento",
+    "RES": "Resgate",
+    "TRP": "Traslado sem PAX e carga",
+    "TRM": "Traslado para manutenção",
+    "TRO": "Treinamento (operadores / outros a bordo)",
+    "TCE": "Transporte de carga",
+    # códigos extras encontrados em bases antigas / variações
+    "DES": "Destruição de ilícitos",
+    "EVT": "Evento",
 }
 
 OPS_SPEC_CODES = {"OBS", "IMA", "REC", "INT", "MOB", "ERR", "DES", "TCE", "EVT"}
@@ -1336,24 +1337,6 @@ def _update_fig_layout(fig, height=430):
     fig.update_yaxes(title_font=dict(size=16), tickfont=dict(size=13))
     return fig
 
-def _build_aircraft_color_map(aircraft_names: list[str]) -> dict[str, str]:
-    palette = (
-        qualitative.Plotly
-        + qualitative.Dark24
-        + qualitative.Light24
-        + qualitative.Alphabet
-        + qualitative.Safe
-        + qualitative.Vivid
-    )
-
-    unique_names = sorted(set(map(str, aircraft_names)))
-
-    color_map = {}
-    for i, name in enumerate(unique_names):
-        color_map[name] = palette[i % len(palette)]
-
-    return color_map
-
 PT_MONTHS = {
     1: "JAN", 2: "FEV", 3: "MAR", 4: "ABR", 5: "MAI", 6: "JUN",
     7: "JUL", 8: "AGO", 9: "SET", 10: "OUT", 11: "NOV", 12: "DEZ",
@@ -1549,7 +1532,9 @@ def _enrich_with_uf_from_airports(base: pd.DataFrame, cfg: ColumnConfig, airport
         else:
             out["_uf_dest"] = out["_uf_lookup"]
 
-    out["_uf_dest"] = out["_uf_dest"].astype(str).str.strip().replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+    uf_series = out["_uf_dest"].astype("string").str.strip()
+    uf_series = uf_series.mask(uf_series.isin(["", "nan", "None", "<NA>"]), pd.NA)
+    out["_uf_dest"] = uf_series
     return out
 
 
@@ -1602,11 +1587,52 @@ def _operations_summary_for_subset(df: pd.DataFrame, cfg: ColumnConfig) -> tuple
     return summary, total
 
 
-def _pie_bar_pair(df_top: pd.DataFrame, label_col: str, value_col: str, title_base: str, value_label: str):
+def _group_ttv(df: pd.DataFrame, group_col: str, output_col: str) -> pd.DataFrame:
+    out = (
+        df.dropna(subset=[group_col])
+        .groupby(group_col, dropna=False)
+        .agg(horas_voo=("_ttv", "sum"))
+        .reset_index()
+        .rename(columns={group_col: output_col})
+        .sort_values(["horas_voo", output_col], ascending=[False, True])
+    )
+    out["horas_voo"] = pd.to_numeric(out["horas_voo"], errors="coerce").fillna(0.0)
+    return out
+
+
+def _pie_bar_pair(
+    df_top: pd.DataFrame,
+    label_col: str,
+    value_col: str,
+    title_base: str,
+    value_label: str,
+    key_prefix: str,
+):
+    work = df_top.copy()
+    work = work[pd.to_numeric(work[value_col], errors="coerce").fillna(0) > 0].copy()
+
+    if work.empty:
+        return
+
+    labels = work[label_col].astype(str).tolist()
+
+    selected_labels = st.multiselect(
+        f"Categorias visíveis — {title_base}",
+        options=labels,
+        default=labels,
+        key=f"{key_prefix}_visible_labels",
+    )
+
+    if not selected_labels:
+        st.info(f"Nenhuma categoria selecionada em {title_base}.")
+        return
+
+    work = work[work[label_col].astype(str).isin(selected_labels)].copy()
+
     c1, c2 = st.columns(2)
 
     with c1:
-        pie_df = prepare_pie_dataframe(df_top, label_col, value_col)
+        pie_df = prepare_pie_dataframe(work, label_col, value_col)
         if not pie_df.empty:
             fig = px.pie(
                 pie_df,
@@ -1615,20 +1641,32 @@ def _pie_bar_pair(df_top: pd.DataFrame, label_col: str, value_col: str, title_ba
                 hole=0.35,
                 title=f"{title_base} (%)",
             )
-            st.plotly_chart(style_pie_figure(fig, 480), width="stretch", config=PLOTLY_CONFIG)
+            st.plotly_chart(
+                style_pie_figure(fig, 480),
+                width="stretch",
+                config=PLOTLY_CONFIG,
+                key=f"{key_prefix}_pie",
+            )
 
     with c2:
+        plot_df = work.sort_values(value_col, ascending=True).copy()
+        plot_df["_valor_txt"] = plot_df[value_col].map(lambda v: _format_float_br(float(v)))
+
         fig = px.bar(
-            df_top.sort_values(value_col, ascending=True),
+            plot_df,
             x=value_col,
             y=label_col,
             orientation="h",
             title=title_base,
             labels={value_col: value_label, label_col: ""},
-            text_auto=".0f",
+            text="_valor_txt",
         )
-        st.plotly_chart(style_horizontal_bar_with_labels(fig, 480, 0.10), width="stretch", config=PLOTLY_CONFIG)
-
+        st.plotly_chart(
+            style_horizontal_bar_with_labels(fig, 480, 0.10),
+            width="stretch",
+            config=PLOTLY_CONFIG,
+            key=f"{key_prefix}_bar",
+        )
 
 def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.DataFrame] = None) -> None:
     st.subheader("Aeronaves")
@@ -1694,47 +1732,68 @@ def render_aircraft(df: pd.DataFrame, cfg: ColumnConfig, airports: Optional[pd.D
     top_pass = grouped_general.nlargest(top_n, "passageiros_total")[[cfg.aircraft, "passageiros_total"]].copy()
     top_carga = grouped_general.nlargest(top_n, "carga_total_kg")[[cfg.aircraft, "carga_total_kg"]].copy()
 
-    _pie_bar_pair(top_ttv, cfg.aircraft, "ttv_total", "Horas de voo por aeronave", "Horas de voo (TTV)")
-    _pie_bar_pair(top_pass, cfg.aircraft, "passageiros_total", "Passageiros transportados por aeronave", "Passageiros")
-    _pie_bar_pair(top_carga, cfg.aircraft, "carga_total_kg", "Carga transportada por aeronave", "Carga (kg)")
+    _pie_bar_pair(
+        top_ttv,
+        cfg.aircraft,
+        "ttv_total",
+        "Horas de voo por aeronave",
+        "Horas de voo (TTV)",
+        "aircraft_ttv",
+    )
+
+    _pie_bar_pair(
+        top_pass,
+        cfg.aircraft,
+        "passageiros_total",
+        "Passageiros transportados por aeronave",
+        "Passageiros",
+        "aircraft_pass",
+    )
+
+    _pie_bar_pair(
+        top_carga,
+        cfg.aircraft,
+        "carga_total_kg",
+        "Carga transportada por aeronave",
+        "Carga (kg)",
+        "aircraft_cargo",
+    )
 
     if "_uf_dest" in base_general.columns:
-        uf_df = (
-            base_general.dropna(subset=["_uf_dest"])
-            .groupby("_uf_dest", dropna=False)
-            .size()
-            .reset_index(name="trechos")
-            .rename(columns={"_uf_dest": "UF"})
-            .sort_values("trechos", ascending=False)
-            .head(top_n)
-        )
+        uf_df = _group_ttv(base_general, "_uf_dest", "UF")
         if not uf_df.empty:
-            _pie_bar_pair(uf_df, "UF", "trechos", "Unidades da federação atendidas", "Trechos")
+            _pie_bar_pair(
+                uf_df,
+                "UF",
+                "horas_voo",
+                "Unidades da federação atendidas",
+                "Horas de voo (TTV)",
+                "aircraft_uf",
+            )
 
     if "_nat_label" in base_general.columns:
-        nat_df = (
-            base_general.dropna(subset=["_nat_label"])
-            .groupby("_nat_label", dropna=False)
-            .size()
-            .reset_index(name="trechos")
-            .rename(columns={"_nat_label": "Natureza da missão"})
-            .sort_values("trechos", ascending=False)
-            .head(top_n)
-        )
+        nat_df = _group_ttv(base_general, "_nat_label", "Natureza da missão")
         if not nat_df.empty:
-            _pie_bar_pair(nat_df, "Natureza da missão", "trechos", "Natureza da missão", "Trechos")
+            _pie_bar_pair(
+                nat_df,
+                "Natureza da missão",
+                "horas_voo",
+                "Natureza da missão",
+                "Horas de voo (TTV)",
+                "aircraft_nat",
+            )
 
     if "_espec_label" in base_general.columns:
-        espec_df = (
-            base_general.dropna(subset=["_espec_label"])
-            .groupby("_espec_label", dropna=False)
-            .size()
-            .reset_index(name="trechos")
-            .rename(columns={"_espec_label": "Especificação da missão"})
-            .sort_values("trechos", ascending=False)
-        )
+        espec_df = _group_ttv(base_general, "_espec_label", "Especificação da missão")
         if not espec_df.empty:
-            _pie_bar_pair(espec_df, "Especificação da missão", "trechos", "Especificação da missão", "Trechos")
+            _pie_bar_pair(
+                espec_df,
+                "Especificação da missão",
+                "horas_voo",
+                "Especificação da missão",
+                "Horas de voo (TTV)",
+                "aircraft_espec",
+            )
 
     show_table = grouped_general.rename(columns={
         cfg.aircraft: "Aeronave",
