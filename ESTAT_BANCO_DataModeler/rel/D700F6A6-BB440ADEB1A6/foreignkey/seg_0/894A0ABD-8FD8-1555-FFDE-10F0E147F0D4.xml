@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="894A0ABD-8FD8-1555-FFDE-10F0E147F0D4" containerWithKeyObject="9A93D522-9E7C-7390-E1F8-60228062716E" localFKIndex="EDD192A7-3FEE-39BA-B5DC-6DA971BA655D" name="FK_TB_TRECHO_AER">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>3EA69C97-6759-EE03-C8D4-27325DC46AD5</importedID>
+<referredTableLongName>TB_AERONAVE</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>3B6E3A2D-1B90-9D9D-B5CA-CB7988CF7818</referredTableID>
+<keyObject>305B05E1-E3F2-A62D-1BD9-E42B2B1213CA</keyObject>
+<referredKeyID>305B05E1-E3F2-A62D-1BD9-E42B2B1213CA</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_AERONAVE</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

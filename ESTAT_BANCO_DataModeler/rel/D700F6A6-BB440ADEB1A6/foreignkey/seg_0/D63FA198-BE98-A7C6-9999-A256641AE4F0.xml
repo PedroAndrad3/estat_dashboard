@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="D63FA198-BE98-A7C6-9999-A256641AE4F0" containerWithKeyObject="9A93D522-9E7C-7390-E1F8-60228062716E" localFKIndex="80499ABD-DD6A-3C8D-FD9C-29D50740B6A7" name="FK_TB_TRECHO_TEMPO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>335CE6A3-DF98-3C38-A956-86E393EF7C05</importedID>
+<referredTableLongName>TB_TEMPO</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>7CFEA1FE-807D-01EF-C528-39CD198D7222</referredTableID>
+<keyObject>B1D12AB8-3C5E-E8CE-DFC6-4038F3D065D4</keyObject>
+<referredKeyID>B1D12AB8-3C5E-E8CE-DFC6-4038F3D065D4</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_TEMPO</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

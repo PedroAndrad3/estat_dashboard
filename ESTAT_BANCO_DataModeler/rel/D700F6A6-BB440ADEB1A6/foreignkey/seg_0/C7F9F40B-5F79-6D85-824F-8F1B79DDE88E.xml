@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="C7F9F40B-5F79-6D85-824F-8F1B79DDE88E" containerWithKeyObject="17EC432E-7B8C-2C55-1E5F-32FAA3C2C2C1" localFKIndex="0B4A27AE-884D-8F1D-CB47-221404685580" name="FK_TB_TRIP_FUNCAO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>2F0936D7-1D04-9DEF-F980-FEA543D29EB0</importedID>
+<referredTableLongName>TB_FUNCAO_TRIP</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>B055D1B3-053E-E079-9B71-A34815912323</referredTableID>
+<keyObject>9CB0E61E-6F2B-9056-3853-3FFD56413D07</keyObject>
+<referredKeyID>9CB0E61E-6F2B-9056-3853-3FFD56413D07</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_FUNCAO_TRIP</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

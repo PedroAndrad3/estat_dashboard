@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="9B6D1838-9859-75EF-E93B-0D2BA727D60F">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 15:59:02 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>

@@ -1,0 +1,835 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="9A93D522-9E7C-7390-E1F8-60228062716E" name="TB_TRECHO_VOO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fato central do modelo. Cada registro representa um trecho voado da aba _____TOTAL_____.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>1D3A25B0-0721-3C3B-DEB8-B19BA060AC56</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID_TRECHO" id="3960742C-851D-7EEB-B7CA-D04079F87AA9">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>8EF69829-246B-10C5-9282-D9EF75B5320C</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<defaultOntNull>true</defaultOntNull>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="ID_TEMPO" id="8B348B09-8560-9F3E-C148-4A038A010E01">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>57E87AF1-D39F-4CAE-4D0F-8998C4268379</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>033EFA7F-79F0-D9D8-9490-41284501F8D7</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D63FA198-BE98-A7C6-9999-A256641AE4F0" referredColumn="C9797813-0970-2BF6-0340-B31B615CE2F5"/>
+</associations>
+</Column>
+<Column name="ID_AERONAVE" id="F22D503D-8E2B-A9FE-D58A-32EFC00D3CDF">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>F58B3E64-7F7F-7320-F36B-C122F28C05BB</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="894A0ABD-8FD8-1555-FFDE-10F0E147F0D4" referredColumn="8244C1FA-B70C-32E7-C733-F941133CCAFC"/>
+</associations>
+</Column>
+<Column name="ID_ORIGEM" id="29F149CB-EE0E-0E0C-5C60-8FFA4041B304">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>863833E3-5D63-769B-4D20-A99C946604A5</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7BC302C4-53D0-378E-BCD2-ADCEE3506339" referredColumn="7BC9F906-1CE6-05AD-74CD-A2B28C01EE82"/>
+</associations>
+</Column>
+<Column name="ID_DESTINO" id="800D5A03-333F-6BDE-72B2-8700162B14B7">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>B026904F-AA20-26CB-C47B-844EAE370E7B</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8715A197-6C9A-11E6-E8D5-2EB8583C258E" referredColumn="7BC9F906-1CE6-05AD-74CD-A2B28C01EE82"/>
+</associations>
+</Column>
+<Column name="ID_DEMANDANTE" id="652FFDDE-A18B-D05D-08C7-129FCAF6D56C">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>E78E2E22-3F12-83A9-9BD6-087F7165D1EB</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="DFEF35AF-BB2B-E1D1-8B55-EA50052C35A0" referredColumn="D1611614-9E95-BEB2-D9E7-2F759DB5A2AE"/>
+</associations>
+</Column>
+<Column name="ID_NATUREZA" id="A7DD1A42-C714-7C77-FC6C-5415FB1B3A30">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>3736FB11-35B1-8FE5-D5AA-47AF0B2DD0E1</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="83555F7E-142A-58BD-17AF-529599519465" referredColumn="30DA3744-4FEC-6D97-208B-66B9F5451B63"/>
+</associations>
+</Column>
+<Column name="ID_ESPEC" id="F7035871-252C-DE7B-6538-D88BFF93ADE6">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>C63B6A3C-65A0-112F-E9D9-FCD8825BD19B</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="2CB689B5-F7CB-579C-6FEC-6635527782BD" referredColumn="E33A2746-1CB5-39C7-743B-24CC2FE16ABE"/>
+</associations>
+</Column>
+<Column name="DATA_VOO" id="FE2B67A2-3B04-257D-35AC-0898AAE78186">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: DATA. Converter serial Excel para DATE durante a carga.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>30B6F403-709E-0C17-0200-98D03BD66355</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>97EB2717-53DE-1163-A466-4457385AED74</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DIARIO_BORDO" id="814900EF-5C9A-BAF3-1D38-18BD39249901">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: DIARIO DE BORDO.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>2F6C25FC-93BE-D96A-5895-0AE745B8EE2B</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>BA5FF8BC-E974-47DD-7615-3C05A9B41A11</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="FOLHA" id="B780167E-6780-3F9D-87B3-CD30264BCD95">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: FOLHA.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>DEB63FF4-B58A-9A78-D58F-D3A7ABCE8877</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>585A39E2-E68A-A9C5-F9AD-D43F837B7069</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HORARIO_ACIONAMENTO" id="9714D4AF-6D6A-96F9-D88E-62776502C1F8">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: ACION.(Z). Recomenda-se armazenar como data do voo + fracao horaria.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>B024FD05-9B39-B9A0-3C34-E1B12FD89E57</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>B1CA0707-A0B4-9E24-7845-A125C60C7C46</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HORARIO_DECOLAGEM" id="7F24086F-1059-FAA1-E4E7-4C88DF446A32">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: DEC.(Z). Recomenda-se armazenar como data do voo + fracao horaria.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>1A4C6B74-2AEA-49EF-6259-A43C31D4D045</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>B1CA0707-A0B4-9E24-7845-A125C60C7C46</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HORARIO_POUSO" id="256CC2E7-A8D5-6486-71B7-3F15D02DBD67">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: POUSO(Z). Recomenda-se armazenar como data do voo + fracao horaria.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>D6FBE00C-8368-3329-41B7-D68D24CAECA0</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>B1CA0707-A0B4-9E24-7845-A125C60C7C46</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HORARIO_CORTE" id="CDF05B44-E42C-1B85-0D0D-33881BEC9997">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: CORTE (Z). Recomenda-se armazenar como data do voo + fracao horaria.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>5F0057FE-2107-140A-C94A-B316459F1CDE</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>B1CA0707-A0B4-9E24-7845-A125C60C7C46</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TTV_HORAS" id="D5CF4A18-F3F2-5862-0BF8-5B0310917EE0">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: TTV. Converter fracao de dia do Excel para horas multiplicando por 24.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>A7296B15-0DD1-A023-6673-D05BA6F1B1BB</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>54A61B7B-16C4-52EE-BE3C-340F91C6590E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DIU_HORAS" id="6954A442-A8C4-F1A8-153D-E1AD585BD6B8">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: DIU. Converter fracao de dia do Excel para horas multiplicando por 24.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>B39D1C60-487D-4413-7C48-D34D01618C28</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>54A61B7B-16C4-52EE-BE3C-340F91C6590E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NOT_HORAS" id="D30D9BF7-44BF-4FA7-BCF8-F693041F39FE">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: NOT. Converter fracao de dia do Excel para horas multiplicando por 24.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>31C359CA-80BA-EE16-951A-4E012DAF0C87</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>54A61B7B-16C4-52EE-BE3C-340F91C6590E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="IFR_HORAS" id="88F3F940-1A68-7F99-099C-58FD98441A7B">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: IFR-R. Converter fracao de dia do Excel para horas multiplicando por 24.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>0F0F33B4-B0E4-823D-FE9F-553163825494</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>54A61B7B-16C4-52EE-BE3C-340F91C6590E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DIU_NOT_HORAS" id="7B641AA0-4DF1-5707-91EF-454A481B9665">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>F0C08A94-CB11-9FAE-02AC-A66CFF89DB4E</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>54A61B7B-16C4-52EE-BE3C-340F91C6590E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NUM_POUSOS" id="A986EEA2-C419-C4FF-EFE8-84EE3D466B67">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>CA427940-529E-B64A-23A1-DD8800A22E90</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>C0035E6F-DB5B-D4B3-E652-F0112B300FE4</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NUM_ACIONAMENTOS" id="33CE58FF-C2BF-5A0A-8B34-CB3124B07B30">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>35C5B85C-9307-133F-830D-1159EFBCF6BD</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>C0035E6F-DB5B-D4B3-E652-F0112B300FE4</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PASSAG_EMBARQUE" id="BCB98168-F07E-D03E-8FD5-F085E1736982">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: PASSAG. embarq.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>7C76A867-9B1D-338F-3002-00C10E2FE2F8</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>033EFA7F-79F0-D9D8-9490-41284501F8D7</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PASSAG_DESEMBARQUE" id="4F9D4158-FBA1-4262-E548-C81E4B53C767">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: PASSAG. desem.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>00388BBA-1A2B-B42D-352C-F2014CD2D7B0</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>033EFA7F-79F0-D9D8-9490-41284501F8D7</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PRESOS_EMBARQUE" id="79FED119-FE42-EECE-EAAE-8BCF74B7EB54">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: PRESOS embarq.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>4408C249-769C-EE36-AFF0-176B5E5154D7</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>033EFA7F-79F0-D9D8-9490-41284501F8D7</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PRESOS_DESEMBARQUE" id="9D233A63-C127-5870-068D-CE540B97214C">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: PRESOS desem.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>1EC83815-9305-26FD-C7F4-C31E0F5D5AEE</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>033EFA7F-79F0-D9D8-9490-41284501F8D7</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BAGAGEM_EMBARQUE_KG" id="D2524C9E-8E08-B3C6-52C6-505BB910E58A">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>04F4C790-6189-1664-03F1-DFBAB6D70B20</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>11C77CE2-E269-F5E9-1A9D-283587562DFA</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BAGAGEM_DESEMBARQUE_KG" id="7592A607-6F14-CEA7-9197-A073E247C6F3">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>E4E38DE9-0426-4ECC-0B1B-7C29213F2567</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>11C77CE2-E269-F5E9-1A9D-283587562DFA</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CARGA_EMBARQUE_KG" id="624408E6-08DC-0018-AF67-5DA977B8CFFB">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: CARGA(Kg) embarq.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>3FED82FC-2BC1-0444-B489-BEFFEAEDC191</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>11C77CE2-E269-F5E9-1A9D-283587562DFA</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CARGA_DESEMBARQUE_KG" id="7F34CF1C-D40F-DDD7-0512-ABD98A5A5DC6">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: CARGA(Kg) desembarq.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>FD4F0C86-28FA-B033-9FA5-0A2B53CDE487</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>11C77CE2-E269-F5E9-1A9D-283587562DFA</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DESCRICAO_CARGA" id="DA902CBF-FC77-A358-00AC-C2D49BDCB131">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>B089FCA4-6231-E964-5D1D-3BD66232835B</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>DA53F131-7D7B-464A-9E05-533D5AF2D52E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LOCALIDADE_ZZZZ" id="5425D0B7-FF2F-BE05-DA48-19BFF32FC3E4">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>ADCCB68D-D06F-FBD3-200C-127DABC86B90</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>F97CC4C8-6437-5E16-F13E-629B49E12CCD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="RESULTADO_OBSERVACOES" id="981AB73D-D713-F663-FF2F-67B002F9E965">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: RESULTADO / OBSERVACOES PERTINENTES.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>DCBD478A-39C6-0AC5-4D76-EF2CE275A5A8</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>DDD6946F-9DCB-665B-309B-6067873699C8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TIPO_ASA" id="5BCFF7F0-1820-031B-7DAC-12A0DBAF7DE4">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>9F86C65F-D68F-CBB1-05D1-7676C8967C74</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<domain>34DBFF22-05DE-D2FB-38D6-C29E424C98B3</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="FLAG_OBSERVACAO" id="34C62BF5-EB6F-8A53-AAF8-B5E8BE0B9741">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: OBS (IMA + REC), limitado a um por dia conforme regra da planilha.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>6FD752FE-DA59-7D5A-7D6D-BDE8071A2993</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>B9072E42-9C83-2FF0-E1B0-0AD75112167E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="FLAG_INTERVENCAO" id="A544FB6D-240E-9852-D63D-912FAC431C0A">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: INT, limitado a um por dia conforme regra da planilha.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>BE6D4D56-A5A2-8436-99B2-6EB8131011A9</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>B9072E42-9C83-2FF0-E1B0-0AD75112167E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="FLAG_MOBILIZACAO" id="D83B62A7-598D-53B1-9CE7-592558D90118">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: MOBILIZACAO.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>D53648E8-F2BF-9757-7DA1-1D7F4B41E573</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>B9072E42-9C83-2FF0-E1B0-0AD75112167E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="FLAG_ERRADICACAO" id="B5E1B8ED-F149-1397-B228-CE8D2ED670AD">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: ERR.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>551A592F-419F-43E1-B2AB-D784456BD5F2</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>B9072E42-9C83-2FF0-E1B0-0AD75112167E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="FLAG_DESTRUICAO" id="7F65A3CA-70E7-5E0A-43BA-8E82B2318B67">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Origem Excel: DESTRUICAO + ERRADICACAO.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>03FDE58B-09B9-40A6-DF97-36D39C8B9BC1</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>B9072E42-9C83-2FF0-E1B0-0AD75112167E</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ORIGEM_LINHA_EXCEL" id="28EEA67F-0026-8924-ACD6-92A9AFDA7599">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>F10A3A27-F637-2836-5C89-3256DA27E810</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DATA_CARGA" id="D704C4F4-41C5-2DB1-6F12-393B73BBB2DA">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>6266E7DF-5948-8423-71BA-34DAE2833436</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>B1CA0707-A0B4-9E24-7845-A125C60C7C46</domain>
+<defaultValue>SYSTIMESTAMP</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="FB470EDC-5EF7-67B8-F43F-96E089406E08" name="PK_TB_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>8C647422-2CCF-8F16-9CEC-BEE6D1215F70</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3960742C-851D-7EEB-B7CA-D04079F87AA9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4B9DB980-574B-16C9-9416-41A4391766BC" name="IX_TB_TRECHO_TEMPO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>DB49DFF6-C221-0569-EA7A-36AFE7F9AFA4</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8B348B09-8560-9F3E-C148-4A038A010E01"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AF4AAFFF-C968-5783-1C90-0B3D958B98EC" name="IX_TB_TRECHO_DATA">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>A1869107-F0C2-7049-A788-0C8431070182</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FE2B67A2-3B04-257D-35AC-0898AAE78186"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3D2E21C7-4801-BA77-2723-CB759A88D716" name="IX_TB_TRECHO_AER">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>8D1A52D1-4FCA-A196-2BEB-99814B29083A</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F22D503D-8E2B-A9FE-D58A-32EFC00D3CDF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B659855C-D14E-F8AC-1926-AD5DB8A8518C" name="IX_TB_TRECHO_ORIGEM">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>C9EA0B78-8D3D-FEC0-2A9F-CE3B445C4004</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="29F149CB-EE0E-0E0C-5C60-8FFA4041B304"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7DD6100A-C70F-AA44-0CA6-B85FAA4F906A" name="IX_TB_TRECHO_DEST">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>723D4B25-0F06-2A36-0415-223E1D4ADB9E</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="800D5A03-333F-6BDE-72B2-8700162B14B7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C64A1E0D-5177-D8EF-26FF-76AE6F87EC2A" name="IX_TB_TRECHO_DEM">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>8D5BE153-DAFF-21DE-CEC4-7B6295B6F2B9</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="652FFDDE-A18B-D05D-08C7-129FCAF6D56C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D3BB587B-8426-D2DB-4E5E-3CB0E9B1EAD5" name="IX_TB_TRECHO_NAT">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>5A947677-AB2C-B020-4158-E814343AE2DC</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A7DD1A42-C714-7C77-FC6C-5415FB1B3A30"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="9C9F1F60-1D35-B87F-5D30-DE2051321040" name="IX_TB_TRECHO_ESPEC">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>3B339BFF-2E44-8C5C-B51B-27F033624C92</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F7035871-252C-DE7B-6538-D88BFF93ADE6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A7126BC9-1743-04FD-C67C-348A4A726D97" name="IX_TB_TRECHO_ASA">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>D76ED419-EFE8-7EC7-26F3-3D0E9EA2B9D1</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5BCFF7F0-1820-031B-7DAC-12A0DBAF7DE4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="EDD192A7-3FEE-39BA-B5DC-6DA971BA655D" name="FK_TB_TRECHO_AER">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F22D503D-8E2B-A9FE-D58A-32EFC00D3CDF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C0EA21C2-57AB-448B-89C1-2581AAFFCBEF" name="FK_TB_TRECHO_DEM">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="652FFDDE-A18B-D05D-08C7-129FCAF6D56C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="854D448C-80DC-8BE2-32E2-0CFC87558F13" name="FK_TB_TRECHO_DEST">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="800D5A03-333F-6BDE-72B2-8700162B14B7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E2FB1AC4-21CA-CF7C-67A1-3CFB078A9ACA" name="FK_TB_TRECHO_ESPEC">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F7035871-252C-DE7B-6538-D88BFF93ADE6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6E89DEB6-E3ED-8FE8-4589-2E8C0F5AE945" name="FK_TB_TRECHO_NAT">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A7DD1A42-C714-7C77-FC6C-5415FB1B3A30"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="61134CC0-20D7-2BCC-5AFB-840B349A8773" name="FK_TB_TRECHO_ORIGEM">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="29F149CB-EE0E-0E0C-5C60-8FFA4041B304"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="80499ABD-DD6A-3C8D-FD9C-29D50740B6A7" name="FK_TB_TRECHO_TEMPO">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8B348B09-8560-9F3E-C148-4A038A010E01"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="CK_TB_TRECHO_ASA" directorySegmentName="seg_0" id="9374C677-F0C5-4569-2465-17AF0DBF3853">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>F4F5B1F0-5384-4429-340E-A1929499ADC2</importedID>
+<rule><![CDATA[TIPO_ASA IN ('F', 'R')]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_TB_TRECHO_OBS" directorySegmentName="seg_0" id="DBC6D29C-52F0-8D8D-B25F-B6FE923FA2A9">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>DA76F171-0897-536A-C332-B7EF6D9CA8C2</importedID>
+<rule><![CDATA[FLAG_OBSERVACAO IN (0, 1)]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_TB_TRECHO_INT" directorySegmentName="seg_0" id="440F94D1-F6EC-C09D-D35D-ECD590F8FE9C">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>E90016CF-47FC-ADCB-6E21-4D5505F994B5</importedID>
+<rule><![CDATA[FLAG_INTERVENCAO IN (0, 1)]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_TB_TRECHO_MOB" directorySegmentName="seg_0" id="FD02D34B-B586-91CA-4366-FA3FCECA5AB4">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>C2EE2CDF-352F-E6CC-5F8A-173EC9353836</importedID>
+<rule><![CDATA[FLAG_MOBILIZACAO IN (0, 1)]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_TB_TRECHO_ERR" directorySegmentName="seg_0" id="3E437377-5CFF-7DB9-DB2F-06E4A44E9AF5">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>EC498EBF-9E9A-DC8C-96F3-CF12D20C0AD9</importedID>
+<rule><![CDATA[FLAG_ERRADICACAO IN (0, 1)]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_TB_TRECHO_DES" directorySegmentName="seg_0" id="63D488CA-DC8B-E089-6966-87956D50CE5A">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>0A653994-DDA3-6807-BBFE-8DEFE2DE3077</importedID>
+<rule><![CDATA[FLAG_DESTRUICAO IN (0, 1)]]></rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="2DADC8BD-129C-2E9E-CB5E-517932ABD537" containerWithKeyObject="17EC432E-7B8C-2C55-1E5F-32FAA3C2C2C1" localFKIndex="B9481D9C-1CF2-A3ED-2DF3-84316F0632DB" name="FK_TB_TRIP_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>A71C3FA6-C49E-7F6F-4D4A-A5F39ACF6DA2</importedID>
+<referredTableLongName>TB_TRECHO_VOO</referredTableLongName>
+<deleteRule>CASCADE</deleteRule>
+<referredTableID>9A93D522-9E7C-7390-E1F8-60228062716E</referredTableID>
+<keyObject>FB470EDC-5EF7-67B8-F43F-96E089406E08</keyObject>
+<referredKeyID>FB470EDC-5EF7-67B8-F43F-96E089406E08</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_TRECHO</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

@@ -1,0 +1,130 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="80D6360D-2127-0E01-0C90-4F206BD66CA4" name="TB_INDIC_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Tabela associativa entre trecho voado e indicadores operacionais contabilizados.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>2838B5A7-2C16-D5B4-3606-35839E077EAE</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID_TRECHO" id="53F7A66A-4BC7-B48C-207B-F172BA5A1384">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>7DF9BE67-2DED-02F9-49A3-287A396E59AA</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B0523444-4ADE-F4AB-C189-9A1558852256" referredColumn="3960742C-851D-7EEB-B7CA-D04079F87AA9"/>
+</associations>
+</Column>
+<Column name="ID_INDICADOR" id="CDB3280A-3DE2-E4B2-C4F5-20CA76F356B7">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>B97245A2-E157-A88A-85AB-B051C010DCC5</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A04EF0AB-2BBC-362D-9605-577953EBFF5A" referredColumn="2056300F-2ABC-7428-83A0-D75D96C4F206"/>
+</associations>
+</Column>
+<Column name="VALOR_INDICADOR" id="15FFACFB-9719-ADCE-6B32-29399BC394EB">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>24F166A2-BAA8-3C4F-B522-B02AA2183F66</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>760C34CB-30D4-7461-0D86-7AD95E7D143F</domain>
+<defaultValue>1</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NOME_OPERACAO" id="9D6D945D-A13C-50D4-4694-DBFB3DA7297C">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>0ECBB514-15C6-84DB-57B2-E96CD7197CF6</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>F97CC4C8-6437-5E16-F13E-629B49E12CCD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="OBSERVACAO" id="544A0FB2-D481-74D7-8FEB-2D8782FF418C">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>1D78E7E0-1524-E21F-3545-04E9161E6431</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>DA53F131-7D7B-464A-9E05-533D5AF2D52E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A9E5EC5F-97AB-8281-F2B8-8D19FD17BE56" name="PK_TB_INDIC_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>4AB701BF-D279-06BD-29A5-822C58EE89BE</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="53F7A66A-4BC7-B48C-207B-F172BA5A1384"/>
+<colUsage columnID="CDB3280A-3DE2-E4B2-C4F5-20CA76F356B7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="18209612-21B5-2295-230B-20AC34E8A77A" name="IX_TB_INDIC_IND">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>7C63B146-45AE-4A32-34B3-5F27440B79F6</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CDB3280A-3DE2-E4B2-C4F5-20CA76F356B7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C0C5668B-E655-2BFC-87E3-B78843797806" name="FK_TB_INDIC_IND">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CDB3280A-3DE2-E4B2-C4F5-20CA76F356B7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8C499305-60C5-911B-5B14-1685B65A88BC" name="FK_TB_INDIC_TRECHO">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="53F7A66A-4BC7-B48C-207B-F172BA5A1384"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

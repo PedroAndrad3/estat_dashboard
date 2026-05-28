@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="A04EF0AB-2BBC-362D-9605-577953EBFF5A" containerWithKeyObject="80D6360D-2127-0E01-0C90-4F206BD66CA4" localFKIndex="C0C5668B-E655-2BFC-87E3-B78843797806" name="FK_TB_INDIC_IND">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>9FCD2FD4-4177-3020-472A-8FC1E4BAD7B5</importedID>
+<referredTableLongName>TB_INDICADOR_OP</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>D46B8041-D3D6-81B9-53B9-5619864A92EB</referredTableID>
+<keyObject>4DB13A29-0FE4-F73D-8B86-CD2FDCE339E1</keyObject>
+<referredKeyID>4DB13A29-0FE4-F73D-8B86-CD2FDCE339E1</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_INDICADOR</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

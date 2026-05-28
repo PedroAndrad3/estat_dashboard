@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="C2C409D1-14A1-29D0-ECBB-019B4F9FD007" mainViewID="29983A0C-FBC7-8A98-4B2D-10F224DA9015">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 15:59:02 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

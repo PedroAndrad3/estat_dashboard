@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="Relational_1" id="D700F6A6-C77D-ECB8-E18D-BB440ADEB1A6" mainViewID="4E8FD081-B5FE-861B-E075-6FD3518F4AC7">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 15:59:02 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+<selectedRDBMSSite>01F6E6D1-21D0-CFBD-ABDD-3988D1813575</selectedRDBMSSite>
+<importDDLFileStamps>
+<importDDLFileStamp class="oracle.dbtools.crest.imports.DDLFileStamp">
+<fileName>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</fileName>
+<pathName>C:\Users\leite.pal\Downloads</pathName>
+<dbType>17</dbType>
+</importDDLFileStamp>
+</importDDLFileStamps>
+</relationalModel>

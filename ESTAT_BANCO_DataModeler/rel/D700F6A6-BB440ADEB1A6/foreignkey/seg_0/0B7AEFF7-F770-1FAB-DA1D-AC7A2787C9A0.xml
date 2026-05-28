@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="0B7AEFF7-F770-1FAB-DA1D-AC7A2787C9A0" containerWithKeyObject="17EC432E-7B8C-2C55-1E5F-32FAA3C2C2C1" localFKIndex="000C43F7-10F8-B088-7369-080D4EE4AD0A" name="FK_TB_TRIP_PESSOA">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>9565164E-744D-7606-166E-6C95F8F49BA6</importedID>
+<referredTableLongName>TB_PESSOA</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>FC2D3C57-802E-4959-39F9-F70827F480FC</referredTableID>
+<keyObject>3B0D82E5-BACE-B72F-16F1-8CF3C3AB7F40</keyObject>
+<referredKeyID>3B0D82E5-BACE-B72F-16F1-8CF3C3AB7F40</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_PESSOA</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

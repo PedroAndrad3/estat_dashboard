@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="ESTAT_BANCO_DataModeler" id="68C12FB9-50F4-F950-A576-1D414A87812A" version="3.5">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 15:59:02 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>68C12FB9-50F4-F950-A576-1D414A87812A</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="41AE475C-278C-DEC7-9C74-C774A581D99B">
+<designStoragePath>C:\caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

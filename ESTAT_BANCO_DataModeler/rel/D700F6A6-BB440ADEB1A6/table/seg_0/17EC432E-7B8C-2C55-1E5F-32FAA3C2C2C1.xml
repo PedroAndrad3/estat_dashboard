@@ -1,0 +1,220 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="17EC432E-7B8C-2C55-1E5F-32FAA3C2C2C1" name="TB_TRIP_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<commentInRDBMS><![CDATA[Tabela associativa entre trecho voado e tripulantes/operadores presentes no trecho.]]></commentInRDBMS>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>3A1F042F-6AF7-F307-B6FC-03399FD9BF2C</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID_TRIP_TRECHO" id="0B1F3680-774D-4097-3868-C24C6EE11630">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>7F2A5E1C-33A2-9F68-F77E-6AC323034E90</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<defaultOntNull>true</defaultOntNull>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="ID_TRECHO" id="431D4211-D3A0-74F3-8731-87F71DC4597E">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>7643B349-F1D8-EC4E-0DA8-2B187907C3BA</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="2DADC8BD-129C-2E9E-CB5E-517932ABD537" referredColumn="3960742C-851D-7EEB-B7CA-D04079F87AA9"/>
+</associations>
+</Column>
+<Column name="ID_PESSOA" id="5B8C3E3F-CE04-0DF0-F7F4-E73A6A3D0497">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>2228F708-151E-4136-16A8-BA73F57A6ED3</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0B7AEFF7-F770-1FAB-DA1D-AC7A2787C9A0" referredColumn="6BFB2ABA-C115-5FF3-B0CE-C835825089AF"/>
+</associations>
+</Column>
+<Column name="ID_FUNCAO_TRIP" id="58ABB2FD-CFEA-F5AE-AA37-5287203C056F">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>8F50432B-A7F1-8F5C-E415-FB457FB15052</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>A5551324-17EA-41FB-2A39-C6E68ABE9C5D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C7F9F40B-5F79-6D85-824F-8F1B79DDE88E" referredColumn="FA6DC66B-9114-1826-B157-137A9EF2DB6D"/>
+</associations>
+</Column>
+<Column name="PAPEL_VOO" id="F6A52235-B7C5-CB71-5B14-9978F8CE9B86">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>50F311A0-1B1E-DA0A-6B56-7697A3385815</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>4477B0A6-BABA-8B96-BA03-989C91B5F2E2</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ORDEM_TRIPULANTE" id="3ACCA47C-B77B-9C7A-B1F0-954C7D09F826">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>BD82177B-B411-0B45-5494-B02F3E632657</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>9EDFB4C6-1EE1-B7B2-1F7B-E44BD1278C65</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HORAS_CREDITADAS" id="B7B32A1F-C530-FB12-57E2-41CDD069A7C4">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>CC6B3870-7BE9-F964-22AB-7456F7DE076F</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>54A61B7B-16C4-52EE-BE3C-340F91C6590E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="OBSERVACAO" id="B9CFE785-27D1-E6C9-49FD-938AC8DA8DDB">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>A90D5980-9716-1887-FA0A-AA6074863491</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>DA53F131-7D7B-464A-9E05-533D5AF2D52E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="356567B6-D0FA-DE4D-9EFC-2AF3A1A8E6BC" name="PK_TB_TRIP_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>B4F4663D-89D9-95D4-9AE1-439510D6A6B2</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0B1F3680-774D-4097-3868-C24C6EE11630"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AB445EAB-6EBB-FE19-774C-BD89D083B633" name="UK_TB_TRIP_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>15430686-01A3-6666-A026-00BBCEC9F7A9</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="431D4211-D3A0-74F3-8731-87F71DC4597E"/>
+<colUsage columnID="5B8C3E3F-CE04-0DF0-F7F4-E73A6A3D0497"/>
+<colUsage columnID="58ABB2FD-CFEA-F5AE-AA37-5287203C056F"/>
+<colUsage columnID="3ACCA47C-B77B-9C7A-B1F0-954C7D09F826"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F33C5995-F2A6-8381-6424-A27B2F6253F1" name="IX_TB_TRIP_TRECHO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>7AF57EF7-CE19-1EE3-AA12-BBEA3F4B4FA0</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="431D4211-D3A0-74F3-8731-87F71DC4597E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E08A1ECB-B1BA-A435-6D7D-4738795D1CC1" name="IX_TB_TRIP_PESSOA">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>20B92019-FF3A-614E-1A8F-758DE56DA62C</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5B8C3E3F-CE04-0DF0-F7F4-E73A6A3D0497"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="986785F4-0555-2D66-1E32-B563F4EC49F7" name="IX_TB_TRIP_FUNCAO">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>3D32D39D-6C02-471F-2FD1-E4249DE9C283</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="58ABB2FD-CFEA-F5AE-AA37-5287203C056F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0B4A27AE-884D-8F1D-CB47-221404685580" name="FK_TB_TRIP_FUNCAO">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="58ABB2FD-CFEA-F5AE-AA37-5287203C056F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="000C43F7-10F8-B088-7369-080D4EE4AD0A" name="FK_TB_TRIP_PESSOA">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5B8C3E3F-CE04-0DF0-F7F4-E73A6A3D0497"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B9481D9C-1CF2-A3ED-2DF3-84316F0632DB" name="FK_TB_TRIP_TRECHO">
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="431D4211-D3A0-74F3-8731-87F71DC4597E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

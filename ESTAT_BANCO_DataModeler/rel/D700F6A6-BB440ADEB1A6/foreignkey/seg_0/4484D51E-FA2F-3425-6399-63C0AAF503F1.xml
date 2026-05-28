@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="4484D51E-FA2F-3425-6399-63C0AAF503F1" containerWithKeyObject="6607AEEC-BAC8-DE2F-1444-C3431B341A17" localFKIndex="A9A695CC-B703-1DE1-44EB-61DFBD66D108" name="FK_TB_DEM_DEM_PAI">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>34E90AB9-0E8F-24F7-6AE9-382EFA36D5C2</importedID>
+<referredTableLongName>TB_DEMANDANTE</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>6607AEEC-BAC8-DE2F-1444-C3431B341A17</referredTableID>
+<keyObject>8B4E1AB9-F050-EC19-3974-CBFB8849E97A</keyObject>
+<referredKeyID>8B4E1AB9-F050-EC19-3974-CBFB8849E97A</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>ID_DEMANDANTE</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

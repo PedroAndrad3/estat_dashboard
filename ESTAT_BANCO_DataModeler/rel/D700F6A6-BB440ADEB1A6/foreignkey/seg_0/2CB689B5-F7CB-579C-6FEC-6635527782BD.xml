@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="2CB689B5-F7CB-579C-6FEC-6635527782BD" containerWithKeyObject="9A93D522-9E7C-7390-E1F8-60228062716E" localFKIndex="E2FB1AC4-21CA-CF7C-67A1-3CFB078A9ACA" name="FK_TB_TRECHO_ESPEC">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>4D429973-2B38-EE85-A42F-8E8DF55EF020</importedID>
+<referredTableLongName>TB_ESPEC_MISSAO</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>227546AC-9FEE-3403-E87D-562B0F7825AA</referredTableID>
+<keyObject>E20BBAF9-561B-0307-E206-35A32089A232</keyObject>
+<referredKeyID>E20BBAF9-561B-0307-E206-35A32089A232</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>ID_ESPEC</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

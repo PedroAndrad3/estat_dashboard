@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="83555F7E-142A-58BD-17AF-529599519465" containerWithKeyObject="9A93D522-9E7C-7390-E1F8-60228062716E" localFKIndex="6E89DEB6-E3ED-8FE8-4589-2E8C0F5AE945" name="FK_TB_TRECHO_NAT">
+<sourceDDLFile>caop_modelo_relacional_TB_SOMENTE_DDL_datamodeler.sql</sourceDDLFile>
+<createdBy>leite.pal</createdBy>
+<createdTime>2026-05-28 16:02:49 UTC</createdTime>
+<ownerDesignName>ESTAT_BANCO_DataModeler</ownerDesignName>
+<importedID>0A4B83DA-D11E-F2AD-524F-20870AF6FFFC</importedID>
+<referredTableLongName>TB_NATUREZA_VOO</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>0A96EF43-A883-7D0A-66BC-BE6373E936D3</referredTableID>
+<keyObject>B1D7CB42-2582-D25B-E886-124B140CCE0F</keyObject>
+<referredKeyID>B1D7CB42-2582-D25B-E886-124B140CCE0F</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>ID_NATUREZA</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
