@@ -168,6 +168,9 @@ class FilterConfig:
     years: list[int]
     asa_mode: str
     exclude_caop: bool
+    granularity: str = "Ano"
+    period_start: Optional[date] = None
+    period_end: Optional[date] = None
 
 PLOTLY_CONFIG = {
     "displaylogo": False,
@@ -471,6 +474,24 @@ def get_year_options(df: pd.DataFrame) -> list[int]:
     years.sort()
     return years
 
+def get_valid_date_range(df: pd.DataFrame) -> tuple[Optional[date], Optional[date]]:
+    if "_date" not in df.columns:
+        return None, None
+    dates = pd.to_datetime(df["_date"], errors="coerce").dropna()
+    if dates.empty:
+        return None, None
+    return dates.min().date(), dates.max().date()
+
+def get_month_options(df: pd.DataFrame) -> list[str]:
+    start_date, end_date = get_valid_date_range(df)
+    if start_date is None or end_date is None:
+        return []
+    return pd.period_range(start=start_date, end=end_date, freq="M").astype(str).tolist()
+
+def format_month(month_value: str) -> str:
+    month = pd.Period(month_value, freq="M")
+    return f"{PT_MONTHS[month.month]}/{month.year}"
+
 def ensure_year_session(year_options: list[int]) -> None:
     if "years_sel" not in st.session_state:
         st.session_state["years_sel"] = year_options.copy()
@@ -488,8 +509,23 @@ def set_last_two_years(year_options: list[int]) -> None:
 
 def render_global_filters(df: pd.DataFrame) -> FilterConfig:
     years = get_year_options(df)
+    month_options = get_month_options(df)
+    min_date, max_date = get_valid_date_range(df)
 
-    if years:
+    st.subheader("Período de averiguação")
+    available_granularities = ["Ano", "Mês", "Dia"] if month_options else ["Ano"]
+    granularity = st.radio(
+        "Granularidade",
+        options=available_granularities,
+        horizontal=True,
+        help="Escolha se o período será definido por ano, mês ou dia.",
+    )
+
+    period_start: Optional[date] = None
+    period_end: Optional[date] = None
+    selected_years: list[int] = []
+
+    if granularity == "Ano" and years:
         ensure_year_session(years)
         c1, c2, c3 = st.columns([2, 1, 1])
         with c2:
@@ -499,8 +535,34 @@ def render_global_filters(df: pd.DataFrame) -> FilterConfig:
         with c1:
             st.multiselect("Filtro de anos", options=years, key="years_sel")
         selected_years = st.session_state["years_sel"]
-    else:
-        selected_years = []
+    elif granularity == "Mês" and month_options:
+        selected_months = st.select_slider(
+            "Intervalo de meses",
+            options=month_options,
+            value=(month_options[0], month_options[-1]),
+            format_func=format_month,
+        )
+        start_month, end_month = selected_months
+        period_start = pd.Period(start_month, freq="M").start_time.date()
+        period_end = pd.Period(end_month, freq="M").end_time.date()
+    elif granularity == "Dia" and min_date is not None and max_date is not None:
+        selected_dates = st.date_input(
+            "Intervalo de datas",
+            value=(min_date, max_date),
+            min_value=min_date,
+            max_value=max_date,
+            format="DD/MM/YYYY",
+        )
+        if isinstance(selected_dates, (tuple, list)):
+            if len(selected_dates) >= 1:
+                period_start = selected_dates[0]
+            if len(selected_dates) >= 2:
+                period_end = selected_dates[1]
+        else:
+            period_start = period_end = selected_dates
+
+    if not month_options:
+        st.caption("A base não possui datas válidas; o filtro por mês e dia não está disponível.")
 
     c1, c2 = st.columns([1, 1])
     with c1:
@@ -508,13 +570,21 @@ def render_global_filters(df: pd.DataFrame) -> FilterConfig:
     with c2:
         exclude_caop = st.checkbox("Excluir demandante CAOP", value=False)
 
-    return FilterConfig(selected_years, asa_mode, exclude_caop)
+    return FilterConfig(selected_years, asa_mode, exclude_caop, granularity, period_start, period_end)
 
 def apply_filters(df: pd.DataFrame, cfg: ColumnConfig, filters: FilterConfig) -> pd.DataFrame:
     out = df.copy()
 
-    if filters.years and "_year" in out.columns:
+    if filters.granularity == "Ano" and filters.years and "_year" in out.columns:
         out = out[out["_year"].isin(filters.years)]
+
+    if filters.granularity in {"Mês", "Dia"} and "_date" in out.columns:
+        dates = pd.to_datetime(out["_date"], errors="coerce").dt.normalize()
+        if filters.period_start is not None:
+            out = out[dates >= pd.Timestamp(filters.period_start)]
+            dates = dates.loc[out.index]
+        if filters.period_end is not None:
+            out = out[dates <= pd.Timestamp(filters.period_end)]
 
     if filters.asa_mode != "Todas" and "_asa" in out.columns:
         code = "F" if "F" in filters.asa_mode else "R"

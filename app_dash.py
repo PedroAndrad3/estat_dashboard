@@ -294,10 +294,64 @@ def get_year_options(df: pd.DataFrame) -> list[int]:
     return years
 
 
-def apply_filters(df: pd.DataFrame, cfg: ColumnConfig, years: list[int], asa_mode: str, exclude_caop: bool) -> pd.DataFrame:
+def get_valid_date_range(df: pd.DataFrame) -> tuple[Optional[date], Optional[date]]:
+    if "_date" not in df.columns:
+        return None, None
+    dates = pd.to_datetime(df["_date"], errors="coerce").dropna()
+    if dates.empty:
+        return None, None
+    return dates.min().date(), dates.max().date()
+
+
+def get_month_options(df: pd.DataFrame) -> list[dict]:
+    start_date, end_date = get_valid_date_range(df)
+    if start_date is None or end_date is None:
+        return []
+    months = pd.period_range(start=start_date, end=end_date, freq="M")
+    return [
+        {"label": f"{PT_MONTHS[month.month]}/{month.year}", "value": str(month)}
+        for month in months
+    ]
+
+
+def apply_filters(
+    df: pd.DataFrame,
+    cfg: ColumnConfig,
+    years: list[int],
+    asa_mode: str,
+    exclude_caop: bool,
+    granularity: str = "Ano",
+    period_start=None,
+    period_end=None,
+) -> pd.DataFrame:
     out = df.copy()
-    if years and "_year" in out.columns:
+    if granularity == "Ano" and years and "_year" in out.columns:
         out = out[out["_year"].isin(years)]
+    if granularity in {"Mês", "Dia"} and "_date" in out.columns:
+        dates = pd.to_datetime(out["_date"], errors="coerce").dt.normalize()
+        if granularity == "Mês":
+            try:
+                start_month = pd.Period(period_start, freq="M") if period_start else None
+            except (TypeError, ValueError):
+                start_month = None
+            try:
+                end_month = pd.Period(period_end, freq="M") if period_end else None
+            except (TypeError, ValueError):
+                end_month = None
+            if start_month is not None and end_month is not None and start_month > end_month:
+                start_month, end_month = end_month, start_month
+            start = start_month.start_time if start_month is not None else pd.NaT
+            end = end_month.end_time.normalize() if end_month is not None else pd.NaT
+        else:
+            start = pd.to_datetime(period_start, errors="coerce") if period_start else pd.NaT
+            end = pd.to_datetime(period_end, errors="coerce") if period_end else pd.NaT
+            if not pd.isna(start) and not pd.isna(end) and start > end:
+                start, end = end, start
+        if not pd.isna(start):
+            out = out[dates >= start]
+            dates = dates.loc[out.index]
+        if not pd.isna(end):
+            out = out[dates <= end]
     if asa_mode and asa_mode != "Todas" and "_asa" in out.columns:
         code = "F" if "F" in asa_mode else "R"
         out = out[out["_asa"] == code]
@@ -1648,12 +1702,30 @@ def _download_filename(extension: str, prefix: str = "dados_filtrados") -> str:
     return f"{prefix}_{stamp}.{extension}"
 
 
-def _filtered_download_df(df_json, cfg_json, years, asa_mode, exclude_caop) -> pd.DataFrame:
+def _filtered_download_df(
+    df_json,
+    cfg_json,
+    years,
+    asa_mode,
+    exclude_caop,
+    granularity="Ano",
+    period_start=None,
+    period_end=None,
+) -> pd.DataFrame:
     if not df_json or not cfg_json:
         return pd.DataFrame()
     df = df_from_store(df_json)
     cfg = config_from_store(cfg_json)
-    return apply_filters(df, cfg, years or [], asa_mode or "Todas", "exclude" in (exclude_caop or []))
+    return apply_filters(
+        df,
+        cfg,
+        years or [],
+        asa_mode or "Todas",
+        "exclude" in (exclude_caop or []),
+        granularity,
+        period_start,
+        period_end,
+    )
 
 
 def _csv_download_payload(df: pd.DataFrame, prefix: str = "dados_filtrados") -> dict:
@@ -1705,11 +1777,39 @@ app.layout = html.Div([
         ], style={"display": "grid", "gap": "10px"}),
         html.Div([
             html.H3("Filtros globais"),
-            dcc.Dropdown(id="years-dropdown", multi=True, placeholder="Filtro de anos"),
+            html.Label("Período de averiguação"),
+            dcc.RadioItems(
+                id="period-granularity",
+                options=[
+                    {"label": "Ano", "value": "Ano"},
+                    {"label": "Mês", "value": "Mês", "disabled": True},
+                    {"label": "Dia", "value": "Dia", "disabled": True},
+                ],
+                value="Ano",
+                inline=True,
+                labelStyle={"marginRight": "14px"},
+            ),
             html.Div([
-                html.Button("Último ano", id="btn-last-year", n_clicks=0),
-                html.Button("Últimos 2", id="btn-last-two", n_clicks=0),
-            ], style={"display": "flex", "gap": "8px"}),
+                dcc.Dropdown(id="years-dropdown", multi=True, placeholder="Filtro de anos"),
+                html.Div([
+                    html.Button("Último ano", id="btn-last-year", n_clicks=0),
+                    html.Button("Últimos 2", id="btn-last-two", n_clicks=0),
+                ], style={"display": "flex", "gap": "8px", "marginTop": "8px"}),
+            ], id="year-period-controls"),
+            html.Div([
+                dcc.Dropdown(id="month-start-dropdown", placeholder="Mês inicial", clearable=False),
+                dcc.Dropdown(id="month-end-dropdown", placeholder="Mês final", clearable=False),
+            ], id="month-period-controls", style={"display": "none", "gap": "8px", "gridTemplateColumns": "1fr 1fr"}),
+            html.Div([
+                dcc.DatePickerRange(
+                    id="day-period-picker",
+                    display_format="DD/MM/YYYY",
+                    minimum_nights=0,
+                    clearable=True,
+                    start_date_placeholder_text="Data inicial",
+                    end_date_placeholder_text="Data final",
+                ),
+            ], id="day-period-controls", style={"display": "none"}),
             dcc.Dropdown(id="asa-dropdown", options=[{"label": x, "value": x} for x in ["Todas", "Asa fixa (F)", "Asa rotativa (R)"]], value="Todas", clearable=False),
             dcc.Checklist(id="exclude-caop-check", options=[{"label": "Excluir demandante CAOP", "value": "exclude"}], value=[]),
             html.Div([
@@ -1902,6 +2002,66 @@ def parse_file(contents, sheet_name):
 
 
 @app.callback(
+    Output("period-granularity", "options"),
+    Output("period-granularity", "value"),
+    Output("month-start-dropdown", "options"),
+    Output("month-start-dropdown", "value"),
+    Output("month-end-dropdown", "options"),
+    Output("month-end-dropdown", "value"),
+    Output("day-period-picker", "min_date_allowed"),
+    Output("day-period-picker", "max_date_allowed"),
+    Output("day-period-picker", "start_date"),
+    Output("day-period-picker", "end_date"),
+    Input("df-store", "data"),
+)
+def configure_period_controls(df_json):
+    base_options = [
+        {"label": "Ano", "value": "Ano"},
+        {"label": "Mês", "value": "Mês", "disabled": True},
+        {"label": "Dia", "value": "Dia", "disabled": True},
+    ]
+    if not df_json:
+        return base_options, "Ano", [], None, [], None, None, None, None, None
+    df = df_from_store(df_json)
+    month_options = get_month_options(df)
+    min_date, max_date = get_valid_date_range(df)
+    if not month_options or min_date is None or max_date is None:
+        return base_options, "Ano", [], None, [], None, None, None, None, None
+    options = [
+        {"label": "Ano", "value": "Ano"},
+        {"label": "Mês", "value": "Mês"},
+        {"label": "Dia", "value": "Dia"},
+    ]
+    return (
+        options,
+        "Ano",
+        month_options,
+        month_options[0]["value"],
+        month_options,
+        month_options[-1]["value"],
+        min_date.isoformat(),
+        max_date.isoformat(),
+        min_date.isoformat(),
+        max_date.isoformat(),
+    )
+
+
+@app.callback(
+    Output("year-period-controls", "style"),
+    Output("month-period-controls", "style"),
+    Output("day-period-controls", "style"),
+    Input("period-granularity", "value"),
+)
+def show_period_controls(granularity):
+    hidden = {"display": "none"}
+    if granularity == "Mês":
+        return hidden, {"display": "grid", "gap": "8px", "gridTemplateColumns": "1fr 1fr"}, hidden
+    if granularity == "Dia":
+        return hidden, hidden, {"display": "block"}
+    return {"display": "block"}, hidden, hidden
+
+
+@app.callback(
     Output("years-dropdown", "value", allow_duplicate=True),
     Input("btn-last-year", "n_clicks"),
     Input("btn-last-two", "n_clicks"),
@@ -1927,12 +2087,34 @@ def quick_years(n1, n2, options):
     State("df-store", "data"),
     State("cfg-store", "data"),
     State("years-dropdown", "value"),
+    State("period-granularity", "value"),
+    State("month-start-dropdown", "value"),
+    State("month-end-dropdown", "value"),
+    State("day-period-picker", "start_date"),
+    State("day-period-picker", "end_date"),
     State("asa-dropdown", "value"),
     State("exclude-caop-check", "value"),
     prevent_initial_call=True,
 )
-def download_filtered_data(n_csv, n_xlsx, df_json, cfg_json, years, asa_mode, exclude_caop):
-    df_filtered = _filtered_download_df(df_json, cfg_json, years, asa_mode, exclude_caop)
+def download_filtered_data(
+    n_csv,
+    n_xlsx,
+    df_json,
+    cfg_json,
+    years,
+    granularity,
+    month_start,
+    month_end,
+    day_start,
+    day_end,
+    asa_mode,
+    exclude_caop,
+):
+    period_start = month_start if granularity == "Mês" else day_start
+    period_end = month_end if granularity == "Mês" else day_end
+    df_filtered = _filtered_download_df(
+        df_json, cfg_json, years, asa_mode, exclude_caop, granularity, period_start, period_end
+    )
     if df_filtered.empty:
         return no_update
     trig = callback_context.triggered_id
@@ -1970,6 +2152,11 @@ def download_routes_report(n_csv, n_xlsx, report_payload, hidden_data, removed_d
     Input("df-store", "data"),
     Input("cfg-store", "data"),
     Input("years-dropdown", "value"),
+    Input("period-granularity", "value"),
+    Input("month-start-dropdown", "value"),
+    Input("month-end-dropdown", "value"),
+    Input("day-period-picker", "start_date"),
+    Input("day-period-picker", "end_date"),
     Input("asa-dropdown", "value"),
     Input("exclude-caop-check", "value"),
     Input("map-mode", "value"),
@@ -1979,12 +2166,41 @@ def download_routes_report(n_csv, n_xlsx, report_payload, hidden_data, removed_d
     Input("map-clipq", "value"),
     Input("map-opacity", "value"),
 )
-def render_tab(tab, df_json, cfg_json, years, asa_mode, exclude_caop, map_mode, map_style, map_states, radius, clip_q, opacity):
+def render_tab(
+    tab,
+    df_json,
+    cfg_json,
+    years,
+    granularity,
+    month_start,
+    month_end,
+    day_start,
+    day_end,
+    asa_mode,
+    exclude_caop,
+    map_mode,
+    map_style,
+    map_states,
+    radius,
+    clip_q,
+    opacity,
+):
     if not df_json or not cfg_json:
         return html.Div("Faça upload do Excel para começar.")
     df = df_from_store(df_json)
     cfg = config_from_store(cfg_json)
-    df_filtered = apply_filters(df, cfg, years or [], asa_mode or "Todas", "exclude" in (exclude_caop or []))
+    period_start = month_start if granularity == "Mês" else day_start
+    period_end = month_end if granularity == "Mês" else day_end
+    df_filtered = apply_filters(
+        df,
+        cfg,
+        years or [],
+        asa_mode or "Todas",
+        "exclude" in (exclude_caop or []),
+        granularity or "Ano",
+        period_start,
+        period_end,
+    )
     airports = None
     try:
         airports = load_airports_cached(data_dir="data")
@@ -2029,14 +2245,36 @@ def render_tab(tab, df_json, cfg_json, years, asa_mode, exclude_caop, map_mode, 
     State("df-store", "data"),
     State("cfg-store", "data"),
     State("years-dropdown", "value"),
+    State("period-granularity", "value"),
+    State("month-start-dropdown", "value"),
+    State("month-end-dropdown", "value"),
+    State("day-period-picker", "start_date"),
+    State("day-period-picker", "end_date"),
     State("asa-dropdown", "value"),
     State("exclude-caop-check", "value"),
     prevent_initial_call=True,
 )
-def render_demandantes_dynamic(selected_aircraft, df_json, cfg_json, years, asa_mode, exclude_caop):
+def render_demandantes_dynamic(
+    selected_aircraft,
+    df_json,
+    cfg_json,
+    years,
+    granularity,
+    month_start,
+    month_end,
+    day_start,
+    day_end,
+    asa_mode,
+    exclude_caop,
+):
     df = df_from_store(df_json)
     cfg = config_from_store(cfg_json)
-    df_filtered = apply_filters(df, cfg, years or [], asa_mode or "Todas", "exclude" in (exclude_caop or []))
+    period_start = month_start if granularity == "Mês" else day_start
+    period_end = month_end if granularity == "Mês" else day_end
+    df_filtered = apply_filters(
+        df, cfg, years or [], asa_mode or "Todas", "exclude" in (exclude_caop or []),
+        granularity or "Ano", period_start, period_end,
+    )
     return demandantes_layout(df_filtered, cfg, selected_aircraft or [])
 
 
@@ -2047,14 +2285,37 @@ def render_demandantes_dynamic(selected_aircraft, df_json, cfg_json, years, asa_
     State("df-store", "data"),
     State("cfg-store", "data"),
     State("years-dropdown", "value"),
+    State("period-granularity", "value"),
+    State("month-start-dropdown", "value"),
+    State("month-end-dropdown", "value"),
+    State("day-period-picker", "start_date"),
+    State("day-period-picker", "end_date"),
     State("asa-dropdown", "value"),
     State("exclude-caop-check", "value"),
     prevent_initial_call=True,
 )
-def render_aircraft_dynamic(general_ac, detail_ac, df_json, cfg_json, years, asa_mode, exclude_caop):
+def render_aircraft_dynamic(
+    general_ac,
+    detail_ac,
+    df_json,
+    cfg_json,
+    years,
+    granularity,
+    month_start,
+    month_end,
+    day_start,
+    day_end,
+    asa_mode,
+    exclude_caop,
+):
     df = df_from_store(df_json)
     cfg = config_from_store(cfg_json)
-    df_filtered = apply_filters(df, cfg, years or [], asa_mode or "Todas", "exclude" in (exclude_caop or []))
+    period_start = month_start if granularity == "Mês" else day_start
+    period_end = month_end if granularity == "Mês" else day_end
+    df_filtered = apply_filters(
+        df, cfg, years or [], asa_mode or "Todas", "exclude" in (exclude_caop or []),
+        granularity or "Ano", period_start, period_end,
+    )
     airports = None
     try:
         airports = load_airports_cached(data_dir="data")
