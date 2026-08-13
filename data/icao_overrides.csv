@@ -1,6 +1,11 @@
 ﻿icao,ident,name,municipality,state,latitude_deg,longitude_deg,iso_country,type,point_category,source
+SBAM,SBAM,Amapá Airport,Amapá,AP,2.0775,-50.8582,BR,public_aerodrome,Brasil,manual_web_metar_taf_2026
+SBDO,SBDO,Dourados - Francisco de Matos Pereira,Dourados,MS,-22.200556,-54.925556,BR,public_aerodrome,Brasil,manual_web_aisweb_decea_2026
 SBGP,SBGP,EMBRAER - Unidade Gavião Peixoto,GAVIÃO PEIXOTO,SP,-21.764444,-48.404722,BR,private_aerodrome,Brasil,ANAC_privados
 SBIT,SBIT,Hidrelétrica de Itumbiara,ITUMBIARA,GO,-18.445,-49.214167,BR,private_aerodrome,Brasil,ANAC_privados
+SBJD,SBJD,Comandante Rolim Adolfo Amaro,Jundiaí,SP,-23.181667,-46.943611,BR,public_aerodrome,Brasil,manual_web_aisweb_decea_2026
+SBJI,SBJI,Ji-Paraná,Ji-Paraná,RO,-10.870556,-61.846667,BR,public_aerodrome,Brasil,manual_web_aisweb_decea_2026
+SBMT,SBMT,Campo de Marte,São Paulo,SP,-23.509167,-46.6375,BR,public_aerodrome,Brasil,manual_web_aisweb_decea_2026
 SBOA,SBOA,Fazenda Antas,SAPÉ,PB,-6.9733333,-35.253333,BR,private_aerodrome,Brasil,ANAC_privados
 SBOB,SBOB,Fazenda Buriti,UNAÍ,MG,-16.3225,-47.223333,BR,private_aerodrome,Brasil,ANAC_privados
 SBOD,SBOD,Fazenda Santa Cruz,ARAGUAÍNA,TO,-7.4558333,-49.195556,BR,private_aerodrome,Brasil,ANAC_privados
@@ -48,8 +53,11 @@ SBQU,SBQU,Hungaro Helipark,ARAGUAÍNA,Tocantins,-7.2041667,-48.219722,BR,helipor
 SBQW,SBQW,Paíto Motors,ARARAS,São Paulo,-22.355556,-47.373611,BR,heliport,Brasil,ANAC_helipontos
 SBQY,SBQY,LDB - Itapevi,ITAPEVI,São Paulo,-23.530278,-46.937222,BR,heliport,Brasil,ANAC_helipontos
 SBQZ,SBQZ,Fazenda Mariane,BROTAS,São Paulo,-22.240278,-48.319167,BR,heliport,Brasil,ANAC_helipontos
+SBRA,SBRA,Santa Maria / Aracaju (alias provável de SBAR),Aracaju,SE,-10.985278,-37.073333,BR,manual_alias,Brasil,manual_alias_confirmar_SBRA_para_SBAR_aisweb_2026
+SBSG,SBSG,São Gonçalo do Amarante - Gov. Aluízio Alves,São Gonçalo do Amarante,RN,-5.768889,-35.366389,BR,public_aerodrome,Brasil,manual_web_aisweb_decea_2026
 SBTV,SBTV,Terravista,PORTO SEGURO,BA,-16.541389,-39.108056,BR,private_aerodrome,Brasil,ANAC_privados
 SBUY,SBUY,Urucu,COARI,AM,-4.8830556,-65.355833,BR,private_aerodrome,Brasil,ANAC_privados
+SBVP,SBVP,Porto Velho - Gov. Jorge Teixeira de Oliveira (alias provável de SBPV),Porto Velho,RO,-8.713611,-63.902778,BR,manual_alias,Brasil,manual_alias_confirmar_SBVP_para_SBPV_aisweb_2026
 SD00,SD00,Americano Brito,TRAIRI,CE,-3.2580556,-39.3425,BR,private_aerodrome,Brasil,ANAC_privados
 SD01,SD01,Fazenda Dona Ester,JUSSARA,GO,-15.806389,-51.413611,BR,private_aerodrome,Brasil,ANAC_privados
 SD02,SD02,Agro Basso,LUÍS EDUARDO MAGALHÃES,BA,-11.9375,-45.8725,BR,private_aerodrome,Brasil,ANAC_privados
@@ -1037,6 +1045,7 @@ SDXA,SDXA,SAWI,NORMANDIA,RR,4.21194444,-60.004444,BR,private_aerodrome,Brasil,AN
 SDXB,SDXB,Piracuruca,PIRACURUCA,PI,-3.8913889,-41.710833,BR,private_aerodrome,Brasil,ANAC_privados
 SDXD,SDXD,Fazenda Guará,JABORANDI,BA,-14.639722,-45.804722,BR,private_aerodrome,Brasil,ANAC_privados
 SDXE,SDXE,Jeremias de Paula Martins,JABOTICABAL,SP,-21.263333,-48.355278,BR,private_aerodrome,Brasil,ANAC_privados
+SDXF,SDXF,Alto Paraíso de Goiás,Alto Paraíso de Goiás,GO,-14.119167,-47.530278,BR,public_aerodrome,Brasil,manual_web_aisweb_decea_2024
 SDXG,SDXG,Seringueiras Tradição,SERINGUEIRAS,Rondônia,-11.763611,-63.021667,BR,heliport,Brasil,ANAC_helipontos
 SDXH,SDXH,Gandini,ITU,São Paulo,-23.251389,-47.326944,BR,heliport,Brasil,ANAC_helipontos
 SDXI,SDXI,Cel Porto,CAMAPUÃ,MS,-19.138889,-53.703889,BR,private_aerodrome,Brasil,ANAC_privados
@@ -2817,7 +2826,7 @@ SJPI,SJPI,Porto Bonito,ITAQUIRAÍ,MS,-23.343889,-53.8725,BR,private_aerodrome,Br
 SJPJ,SJPJ,Prefeitura do Município de Jundiaí,JUNDIAÍ,São Paulo,-23.171389,-46.900278,BR,heliport,Brasil,ANAC_helipontos
 SJPK,SJPK,Fazenda Campo das Princesas,TIMON,MA,-5.3222222,-42.829167,BR,private_aerodrome,Brasil,ANAC_privados
 SJPL,SJPL,Pista do Limão,ITAITUBA,PA,-5.7452778,-56.388611,BR,private_aerodrome,Brasil,ANAC_privados
-SJPM,SJPM,Cap. PM Cidimar Antunes de Almeida,nan,nan,-22.866667,-43.123333,BR,heliport,Brasil,ANAC_helipontos
+SJPM,SJPM,Cap. PM Cidimar Antunes de Almeida,,,-22.866667,-43.123333,BR,heliport,Brasil,ANAC_helipontos
 SJPN,SJPN,Jundiá,MACAÉ,Rio de Janeiro,-22.400556,-41.875556,BR,heliport,Brasil,ANAC_helipontos
 SJPO,SJPO,Xingó,PIRANHAS,AL,-9.5880556,-37.7775,BR,private_aerodrome,Brasil,ANAC_privados
 SJPP,SJPP,Aero Rural,ALTA FLORESTA,MT,-9.9247222,-56.008056,BR,private_aerodrome,Brasil,ANAC_privados
@@ -3125,6 +3134,7 @@ SJZW,SJZW,Fazenda Regina,ITATINGA,SP,-23.286667,-48.738056,BR,private_aerodrome,
 SJZX,SJZX,Abreu Rocha,PRAIA GRANDE,São Paulo,-24.006944,-46.414722,BR,heliport,Brasil,ANAC_helipontos
 SJZY,SJZY,Centro Administrativo Rio Negro,BARUERI,São Paulo,-23.500278,-46.848611,BR,heliport,Brasil,ANAC_helipontos
 SJZZ,SJZZ,AGROPECUÁRIA ZÉ REIS,PALMEIRÓPOLIS,TO,-13.018611,-48.415833,BR,private_aerodrome,Brasil,ANAC_privados
+SLPM,SLPM,Palmira Airport,Yacuma / Palmira,Beni,-13.738,-66.4093,BO,public_aerodrome,Exterior,manual_web_metar_taf_2026
 SN02,SN02,Santa Colomba Agropecuária 2,COCOS,BA,-14.737222,-45.486944,BR,private_aerodrome,Brasil,ANAC_privados
 SN0A,SN0A,Fazenda Santa Helena,LUÍS EDUARDO MAGALHÃES,BA,-12.120278,-46.313611,BR,private_aerodrome,Brasil,ANAC_privados
 SN10,SN10,FAZENDA SOL NASCENTE,FELIZ NATAL,MT,-12.238056,-54.731389,BR,private_aerodrome,Brasil,ANAC_privados

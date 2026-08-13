@@ -5,7 +5,3 @@
 *.xlsb
 *.xltx
 *.xltm
-**/*.localz
-**/*.local
-**/*.git
-**/*.DS_Store

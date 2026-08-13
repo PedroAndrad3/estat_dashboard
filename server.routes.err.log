@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\Pedro\OneDrive\Área de Trabalho\UnB\Estágio\estat_dashboard-main\estat_dashboard-main\app_dash.py", line 1250, in <module>
+    @app.callback(
+     ^^^
+NameError: name 'app' is not defined
